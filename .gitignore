@@ -1,0 +1,15 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# next
+/.next/
+/out/
+
+# env
+.env*.local
+
+# misc
+.DS_Store
+*.tsbuildinfo
