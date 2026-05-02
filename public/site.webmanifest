@@ -1,0 +1,21 @@
+{
+  "name": "Huntecom — Amazon FBA Coaching",
+  "short_name": "Huntecom",
+  "description": "Amazon FBA Kurs, Schulung und 1:1 Coaching mit KI-Tools für deinen Markenaufbau.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "lang": "de",
+  "categories": ["education", "business", "lifestyle"],
+  "icons": [
+    {
+      "src": "/brand/huntecom-favicon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
