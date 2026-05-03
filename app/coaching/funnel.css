@@ -1,0 +1,315 @@
+/* ───────────────────────────────────────────────────────────────────
+   Huntecom Coaching Funnel — premium dark theme
+   Scoped to .hc-funnel so it never bleeds into the iframe-mirrored
+   Webflow site. Uses CSS variables for easy rebrand.
+   ─────────────────────────────────────────────────────────────────── */
+
+.hc-funnel {
+	--hc-bg: #0a0a0a;
+	--hc-surface: #141414;
+	--hc-surface-2: #1c1c1c;
+	--hc-border: #262626;
+	--hc-text: #f5f5f5;
+	--hc-text-muted: #a3a3a3;
+	--hc-accent: #c9a86a; /* huntecom gold */
+	--hc-accent-hover: #d4b478;
+	--hc-danger: #ef4444;
+	--hc-success: #22c55e;
+
+	min-height: 100dvh;
+	background: radial-gradient(
+			ellipse at top,
+			rgba(201, 168, 106, 0.12) 0%,
+			transparent 50%
+		),
+		var(--hc-bg);
+	color: var(--hc-text);
+	font-family:
+		"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding: clamp(1rem, 4vw, 3rem) 1rem;
+}
+
+.hc-funnel__shell {
+	width: 100%;
+	max-width: 640px;
+	background: var(--hc-surface);
+	border: 1px solid var(--hc-border);
+	border-radius: 24px;
+	padding: clamp(1.5rem, 4vw, 2.5rem);
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.04) inset,
+		0 30px 60px -20px rgba(0, 0, 0, 0.6);
+}
+
+/* Progress */
+.hc-funnel__progress {
+	height: 3px;
+	background: var(--hc-border);
+	border-radius: 999px;
+	overflow: hidden;
+	margin-bottom: 1.75rem;
+}
+.hc-funnel__progress-bar {
+	height: 100%;
+	background: linear-gradient(
+		90deg,
+		var(--hc-accent),
+		var(--hc-accent-hover)
+	);
+	transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Brand */
+.hc-funnel__brand {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	margin-bottom: 2rem;
+}
+.hc-funnel__brand-mark {
+	width: 40px;
+	height: 40px;
+	border-radius: 10px;
+	background: linear-gradient(135deg, var(--hc-accent), #8a6d3a);
+	display: grid;
+	place-items: center;
+	font-weight: 700;
+	color: #0a0a0a;
+	font-size: 1.125rem;
+}
+.hc-funnel__brand-name {
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	font-size: 0.95rem;
+}
+.hc-funnel__brand-tag {
+	color: var(--hc-text-muted);
+	font-size: 0.8rem;
+	margin-top: 2px;
+}
+
+/* Step */
+.hc-step {
+	margin-bottom: 1.5rem;
+}
+.hc-step--center {
+	text-align: center;
+	padding: 2rem 0;
+}
+.hc-step__title {
+	font-size: clamp(1.4rem, 3vw, 1.75rem);
+	font-weight: 600;
+	letter-spacing: -0.02em;
+	line-height: 1.2;
+	margin: 0 0 0.5rem;
+}
+.hc-step__lead {
+	color: var(--hc-text-muted);
+	font-size: 0.95rem;
+	line-height: 1.6;
+	margin: 0 0 1.5rem;
+}
+
+/* Inputs */
+.hc-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.75rem;
+}
+.hc-field {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+}
+.hc-field--full {
+	grid-column: 1 / -1;
+}
+.hc-field span {
+	font-size: 0.8rem;
+	color: var(--hc-text-muted);
+	font-weight: 500;
+	letter-spacing: 0.01em;
+}
+.hc-field input,
+.hc-textarea {
+	background: var(--hc-surface-2);
+	border: 1px solid var(--hc-border);
+	border-radius: 10px;
+	padding: 0.75rem 0.9rem;
+	color: var(--hc-text);
+	font: inherit;
+	font-size: 0.95rem;
+	transition:
+		border-color 0.2s,
+		background 0.2s;
+}
+.hc-field input::placeholder,
+.hc-textarea::placeholder {
+	color: #525252;
+}
+.hc-field input:focus,
+.hc-textarea:focus {
+	outline: none;
+	border-color: var(--hc-accent);
+	background: #1f1f1f;
+}
+.hc-textarea {
+	width: 100%;
+	resize: vertical;
+	min-height: 140px;
+	box-sizing: border-box;
+}
+
+/* Multi-choice cards */
+.hc-options {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+}
+.hc-option {
+	background: var(--hc-surface-2);
+	border: 1px solid var(--hc-border);
+	border-radius: 12px;
+	padding: 1rem 1.25rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+	color: var(--hc-text);
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+	transition:
+		border-color 0.15s,
+		background 0.15s,
+		transform 0.05s;
+}
+.hc-option:hover {
+	border-color: rgba(201, 168, 106, 0.5);
+	background: #1f1f1f;
+}
+.hc-option:active {
+	transform: scale(0.99);
+}
+.hc-option.is-active {
+	border-color: var(--hc-accent);
+	background: rgba(201, 168, 106, 0.08);
+	box-shadow: 0 0 0 1px var(--hc-accent) inset;
+}
+.hc-option__label {
+	font-weight: 500;
+	font-size: 0.95rem;
+}
+.hc-option__hint {
+	color: var(--hc-text-muted);
+	font-size: 0.8rem;
+}
+
+/* Actions */
+.hc-actions {
+	display: flex;
+	gap: 0.75rem;
+	margin-top: 1.5rem;
+	justify-content: space-between;
+}
+.hc-btn {
+	border-radius: 10px;
+	padding: 0.85rem 1.5rem;
+	font: inherit;
+	font-weight: 600;
+	font-size: 0.95rem;
+	cursor: pointer;
+	border: 1px solid transparent;
+	transition: all 0.15s;
+}
+.hc-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+.hc-btn--primary {
+	background: var(--hc-accent);
+	color: #0a0a0a;
+	margin-left: auto;
+}
+.hc-btn--primary:not(:disabled):hover {
+	background: var(--hc-accent-hover);
+}
+.hc-btn--ghost {
+	background: transparent;
+	color: var(--hc-text-muted);
+	border-color: var(--hc-border);
+}
+.hc-btn--ghost:not(:disabled):hover {
+	color: var(--hc-text);
+	border-color: #404040;
+}
+
+/* States */
+.hc-error {
+	margin-top: 1rem;
+	padding: 0.75rem 1rem;
+	background: rgba(239, 68, 68, 0.1);
+	border: 1px solid rgba(239, 68, 68, 0.3);
+	border-radius: 10px;
+	color: #fca5a5;
+	font-size: 0.85rem;
+}
+.hc-warn {
+	margin-top: 1rem;
+	padding: 0.85rem 1rem;
+	background: rgba(201, 168, 106, 0.08);
+	border: 1px solid rgba(201, 168, 106, 0.3);
+	border-radius: 10px;
+	color: #d4b478;
+	font-size: 0.85rem;
+	line-height: 1.5;
+}
+.hc-warn a {
+	color: var(--hc-accent);
+	text-decoration: underline;
+}
+
+.hc-trust {
+	margin-top: 2rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid var(--hc-border);
+	font-size: 0.75rem;
+	color: var(--hc-text-muted);
+	text-align: center;
+}
+
+.hc-spinner {
+	width: 36px;
+	height: 36px;
+	border: 3px solid var(--hc-border);
+	border-top-color: var(--hc-accent);
+	border-radius: 50%;
+	margin: 0 auto 1rem;
+	animation: hc-spin 0.7s linear infinite;
+}
+@keyframes hc-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+	.hc-grid {
+		grid-template-columns: 1fr;
+	}
+	.hc-funnel__shell {
+		border-radius: 18px;
+	}
+	.hc-actions {
+		flex-direction: column-reverse;
+	}
+	.hc-btn--primary,
+	.hc-btn--ghost {
+		width: 100%;
+		margin-left: 0;
+	}
+}
