@@ -1,5 +1,3 @@
-import "./funnel.css";
-
 // Local layout override — globals.css locks the body to 100dvh / overflow:hidden
 // so the iframe-mirrored homepage stays pixel-perfect. The coaching funnel
 // needs a normal scrolling document, so we patch the body styles here.

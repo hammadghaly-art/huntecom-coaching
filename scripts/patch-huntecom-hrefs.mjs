@@ -22,6 +22,15 @@ for (const f of htmlFiles) {
 	s = s.replaceAll('href="https://huntecom.com/"', 'href="index.html"');
 	// Häufig: Webflow-Staging, falls in Links vorkommt
 	s = s.replaceAll('href="https://huntecom.webflow.io/"', 'href="index.html"');
+	// Calendly → gleiche Seite, Hash öffnet Coaching-Funnel-Overlay (Next home-client)
+	s = s.replace(
+		/href="https:\/\/calendly\.com\/huntecom\/[^"]+"/gi,
+		'href="/#apply" target="_top" rel="noopener noreferrer"',
+	);
+	s = s.replace(
+		/href='https:\/\/calendly\.com\/huntecom\/[^']+'/gi,
+		"href='/#apply' target='_top' rel='noopener noreferrer'",
+	);
 	if (s !== before) {
 		fs.writeFileSync(p, s, "utf8");
 		console.log("patched", f);

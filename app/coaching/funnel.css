@@ -45,6 +45,78 @@
 		0 30px 60px -20px rgba(0, 0, 0, 0.6);
 }
 
+/* react-phone-number-input — aligned with Huntecom inputs */
+.hc-funnel .hc-phone .PhoneInput {
+	display: flex;
+	align-items: stretch;
+	gap: 0.5rem;
+	width: 100%;
+}
+.hc-funnel .hc-phone .PhoneInputCountry {
+	margin: 0;
+}
+.hc-funnel .hc-phone .PhoneInputCountrySelect,
+.hc-funnel .hc-phone .PhoneInputCountrySelectArrow {
+	margin: 0;
+}
+.hc-funnel .hc-phone .PhoneInputCountrySelect {
+	height: auto;
+	min-height: 46px;
+	padding: 0 0.55rem 0 0.65rem;
+	border-radius: 10px;
+	border: 1px solid var(--hc-border);
+	background: var(--hc-surface-2);
+	color: var(--hc-text);
+	font: inherit;
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition:
+		border-color 0.2s,
+		background 0.2s;
+}
+.hc-funnel .hc-phone .PhoneInputCountrySelect:focus {
+	outline: none;
+	border-color: var(--hc-accent);
+	background: #1f1f1f;
+}
+.hc-funnel .hc-phone .PhoneInputCountryIcon {
+	width: 1.4em;
+	height: 1em;
+	border-radius: 2px;
+	overflow: hidden;
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.hc-funnel .hc-phone .PhoneInputInput {
+	flex: 1;
+	min-width: 0;
+	min-height: 46px;
+	box-sizing: border-box;
+	background: var(--hc-surface-2);
+	border: 1px solid var(--hc-border);
+	border-radius: 10px;
+	padding: 0.75rem 0.9rem;
+	color: var(--hc-text);
+	font: inherit;
+	font-size: 0.95rem;
+	transition:
+		border-color 0.2s,
+		background 0.2s;
+}
+.hc-funnel .hc-phone .PhoneInputInput::selection {
+	background: rgba(201, 168, 106, 0.35);
+}
+.hc-funnel .hc-phone .PhoneInputInput::placeholder {
+	color: #525252;
+}
+.hc-funnel .hc-phone .PhoneInputInput:focus {
+	outline: none;
+	border-color: var(--hc-accent);
+	background: #1f1f1f;
+}
+.hc-funnel .hc-phone--focus .PhoneInputInput {
+	border-color: var(--hc-accent);
+}
+
 /* Progress */
 .hc-funnel__progress {
 	height: 3px;
@@ -67,13 +139,32 @@
 .hc-funnel__brand {
 	display: flex;
 	align-items: center;
-	gap: 0.75rem;
+	gap: 0.875rem;
 	margin-bottom: 2rem;
 }
-.hc-funnel__brand-mark {
+.hc-funnel__brand-logo-wrap {
+	width: 48px;
+	height: 48px;
+	flex-shrink: 0;
+	display: grid;
+	place-items: center;
+	border-radius: 12px;
+	background: rgba(255, 255, 255, 0.03);
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+}
+.hc-funnel__brand-logo {
 	width: 40px;
 	height: 40px;
-	border-radius: 10px;
+	object-fit: contain;
+	display: block;
+}
+.hc-funnel__brand-text {
+	min-width: 0;
+}
+.hc-funnel__brand-mark {
+	width: 48px;
+	height: 48px;
+	border-radius: 12px;
 	background: linear-gradient(135deg, var(--hc-accent), #8a6d3a);
 	display: grid;
 	place-items: center;
@@ -107,11 +198,26 @@
 	line-height: 1.2;
 	margin: 0 0 0.5rem;
 }
+.hc-step__subtitle {
+	font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	line-height: 1.25;
+	margin: 1.25rem 0 0.35rem;
+	color: var(--hc-text);
+}
 .hc-step__lead {
 	color: var(--hc-text-muted);
 	font-size: 0.95rem;
 	line-height: 1.6;
 	margin: 0 0 1.5rem;
+}
+.hc-step__lead strong {
+	color: var(--hc-accent);
+	font-weight: 600;
+}
+.hc-step__lead--tight {
+	margin-bottom: 0.75rem;
 }
 
 /* Inputs */
@@ -128,11 +234,62 @@
 .hc-field--full {
 	grid-column: 1 / -1;
 }
+
+/* Pflicht-Einwilligung: Checkbox links, Text rechts */
+.hc-funnel .hc-consent {
+	display: flex;
+	gap: 0.75rem;
+	align-items: flex-start;
+	cursor: pointer;
+	margin-top: 0.25rem;
+}
+.hc-funnel .hc-consent__checkbox {
+	width: 1.25rem;
+	height: 1.25rem;
+	min-width: 1.25rem;
+	margin-top: 0.15rem;
+	flex-shrink: 0;
+	accent-color: var(--hc-accent);
+	cursor: pointer;
+}
+.hc-funnel .hc-consent:focus-within .hc-consent__checkbox {
+	outline: 2px solid var(--hc-accent);
+	outline-offset: 2px;
+}
+.hc-funnel .hc-consent__text {
+	font-size: 0.8rem;
+	line-height: 1.5;
+	color: var(--hc-text-muted);
+	font-weight: 400;
+}
+.hc-funnel .hc-consent__text a {
+	color: var(--hc-accent);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+.hc-funnel .hc-consent__text a:hover {
+	color: var(--hc-accent-hover);
+}
+.hc-funnel .hc-consent__required {
+	color: var(--hc-danger);
+	font-weight: 600;
+}
+
 .hc-field span {
 	font-size: 0.8rem;
 	color: var(--hc-text-muted);
 	font-weight: 500;
 	letter-spacing: 0.01em;
+}
+.hc-field-hint {
+	display: block;
+	font-size: 0.72rem;
+	font-weight: 400;
+	color: #737373;
+	line-height: 1.45;
+	letter-spacing: 0.01em;
+	margin-top: -0.1rem;
+	margin-bottom: 0.05rem;
 }
 .hc-field input,
 .hc-textarea {
@@ -272,13 +429,23 @@
 	text-decoration: underline;
 }
 
-.hc-trust {
-	margin-top: 2rem;
+.hc-legal-foot {
+	margin-top: 1.5rem;
 	padding-top: 1.25rem;
 	border-top: 1px solid var(--hc-border);
 	font-size: 0.75rem;
 	color: var(--hc-text-muted);
 	text-align: center;
+	line-height: 1.5;
+}
+.hc-legal-foot a {
+	color: var(--hc-text-muted);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	transition: color 0.15s;
+}
+.hc-legal-foot a:hover {
+	color: var(--hc-accent);
 }
 
 .hc-spinner {

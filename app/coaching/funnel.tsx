@@ -1,14 +1,17 @@
 "use client";
 
 import Script from "next/script";
+import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
+import deLabels from "react-phone-number-input/locale/de.json";
+import "react-phone-number-input/style.css";
 import { useEffect, useMemo, useState } from "react";
+import "./funnel.css";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // COACHING QUALIFICATION FUNNEL
 //
-// 5-step progressive form. Each answer narrows the score; the very low-end
-// gets filtered out (gentle reject) so we don't waste 1:1 calls on people
-// who don't have the runway for FBA.
+// 5-step progressive form: Fragen → Motivation → Kontaktdaten → Submit → Calendly.
+// Qualifikation zuerst, persönliche Daten erst am Ende. Score-Boost wie gehabt.
 //
 // On submit we POST to ai.huntecom.com/api/crm/lead which:
 //   1. creates / updates CrmContact in workspace=huntecom
@@ -30,11 +33,14 @@ type FormState = {
 	lastName: string;
 	email: string;
 	phone: string;
-	instagram: string;
+	/** Optional — beliebiger Link (Website, Profil, …) */
+	link: string;
 	revenueGoal: RevenueGoal | "";
 	capital: Capital | "";
 	experience: Experience | "";
 	goal: string;
+	/** Pflicht für Absenden: dokumentierte Einwilligung → `emailMarketingOptIn` im CRM */
+	contactConsent: boolean;
 };
 
 const INITIAL: FormState = {
@@ -42,11 +48,12 @@ const INITIAL: FormState = {
 	lastName: "",
 	email: "",
 	phone: "",
-	instagram: "",
+	link: "",
 	revenueGoal: "",
 	capital: "",
 	experience: "",
 	goal: "",
+	contactConsent: false,
 };
 
 const REVENUE_OPTIONS: { value: RevenueGoal; label: string; hint?: string }[] = [
@@ -118,6 +125,8 @@ export function CoachingFunnel({
 	const [data, setData] = useState<FormState>(INITIAL);
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	/** Wenn `/brand/…` fehlt oder nicht lädt: stabiles „H“-Fallback wie zuvor. */
+	const [brandLogoOk, setBrandLogoOk] = useState(true);
 
 	const utm = useMemo(() => readUtmFromUrl(), []);
 
@@ -136,7 +145,19 @@ export function CoachingFunnel({
 
 	function next() {
 		setError(null);
-		if (step === 0) {
+		if (step === 0 && !data.experience) {
+			setError("Bitte wähle einen Punkt.");
+			return;
+		}
+		if (step === 1 && !data.revenueGoal) {
+			setError("Bitte wähle dein Ziel.");
+			return;
+		}
+		if (step === 2 && !data.capital) {
+			setError("Bitte wähle einen Punkt.");
+			return;
+		}
+		if (step === 4) {
 			if (!data.firstName.trim() || !data.email.trim()) {
 				setError("Bitte Name und E-Mail eintragen.");
 				return;
@@ -145,17 +166,19 @@ export function CoachingFunnel({
 				setError("E-Mail-Adresse sieht nicht richtig aus.");
 				return;
 			}
-		}
-		if (step === 1 && !data.experience) {
-			setError("Bitte wähle einen Punkt.");
-			return;
-		}
-		if (step === 2 && !data.revenueGoal) {
-			setError("Bitte wähle dein Ziel.");
-			return;
-		}
-		if (step === 3 && !data.capital) {
-			setError("Bitte wähle einen Punkt.");
+			if (data.phone.trim() && !isPossiblePhoneNumber(data.phone)) {
+				setError(
+					"Die Telefonnummer ist unvollständig — bitte prüfen oder Feld leer lassen.",
+				);
+				return;
+			}
+			if (!data.contactConsent) {
+				setError(
+					"Bitte bestätige die Einwilligung zur Kontaktaufnahme und die Kenntnisnahme der Datenschutzerklärung.",
+				);
+				return;
+			}
+			setStep(TOTAL_STEPS);
 			return;
 		}
 		setStep((s) => Math.min(s + 1, TOTAL_STEPS));
@@ -206,8 +229,9 @@ export function CoachingFunnel({
 						capital: data.capital || undefined,
 						experience: data.experience || undefined,
 						goal: data.goal.trim() || undefined,
-						instagram: data.instagram.trim() || undefined,
+						link: data.link.trim() || undefined,
 					},
+					emailMarketingOptIn: data.contactConsent,
 					utm: {
 						source: utm.source,
 						medium: utm.medium,
@@ -226,6 +250,7 @@ export function CoachingFunnel({
 			console.error("Lead submit failed", err);
 			setError("Übertragung fehlgeschlagen — bitte versuche es nochmal.");
 			setSubmitting(false);
+			setStep(4);
 			return;
 		}
 
@@ -241,8 +266,7 @@ export function CoachingFunnel({
 		window.location.href = url.toString();
 	}
 
-	// Step 5 of 5 → "Anfrage absenden". We auto-fire submit when entering
-	// the success step so the user doesn't have to click an extra button.
+	// Step 5: Auto-CRMPush + Weiterleitung Calendly nach gültigen Kontaktdaten.
 	useEffect(() => {
 		if (step === TOTAL_STEPS) {
 			submit();
@@ -294,25 +318,162 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 				</div>
 
 				<div className="hc-funnel__brand">
-					<span className="hc-funnel__brand-mark" aria-hidden="true">
-						H
-					</span>
-					<div>
+					<div className="hc-funnel__brand-logo-wrap">
+						{brandLogoOk ? (
+							// Public-Asset wie in layout.tsx (bei Bedarf durch größeres Logo in /brand ersetzen)
+							<img
+								src="/brand/huntecom-favicon.png"
+								width={48}
+								height={48}
+								alt=""
+								decoding="async"
+								className="hc-funnel__brand-logo"
+								onError={() => setBrandLogoOk(false)}
+							/>
+						) : (
+							<span className="hc-funnel__brand-mark" aria-hidden="true">
+								H
+							</span>
+						)}
+					</div>
+					<div className="hc-funnel__brand-text">
 						<div className="hc-funnel__brand-name">Huntecom</div>
 						<div className="hc-funnel__brand-tag">1:1 Amazon FBA Coaching</div>
 					</div>
 				</div>
 
-				{/* STEP 0 — contact basics */}
+				{/* STEP 0 — Einstieg + Erfahrung */}
 				{step === 0 ? (
 					<section className="hc-step">
 						<h1 className="hc-step__title">
 							Bewirb dich um dein 1:1 Coaching
 						</h1>
 						<p className="hc-step__lead">
-							Beantworte 5 kurze Fragen — danach buchst du dein
-							Erstgespräch direkt im Kalender. Kein Massen-Coaching, nur
-							echte Plätze.
+							Zuerst ein paar Fragen zu deiner Situation — Kontaktdaten und
+							Kalender kommen am Ende. Neue 1:1-Begleitungen sind bei uns
+							bewusst <strong>limitiert verfügbar</strong>, damit die Betreuung
+							fokussiert bleibt.
+						</p>
+						<h2 className="hc-step__subtitle">Wo stehst du gerade?</h2>
+						<p className="hc-step__lead hc-step__lead--tight">
+							Damit wir wissen, womit wir starten.
+						</p>
+						<div className="hc-options">
+							{EXPERIENCE_OPTIONS.map((opt) => (
+								<button
+									key={opt.value}
+									type="button"
+									className={`hc-option ${data.experience === opt.value ? "is-active" : ""}`}
+									onClick={() => update("experience", opt.value)}
+								>
+									<span className="hc-option__label">{opt.label}</span>
+									{opt.hint ? (
+										<span className="hc-option__hint">{opt.hint}</span>
+									) : null}
+								</button>
+							))}
+						</div>
+					</section>
+				) : null}
+
+				{/* STEP 1 — Umsatzziel */}
+				{step === 1 ? (
+					<section className="hc-step">
+						<h1 className="hc-step__title">
+							Was willst du monatlich verdienen?
+						</h1>
+						<p className="hc-step__lead">
+							Realistisches Ziel auf 12-Monats-Sicht.
+						</p>
+						<div className="hc-options">
+							{REVENUE_OPTIONS.map((opt) => (
+								<button
+									key={opt.value}
+									type="button"
+									className={`hc-option ${data.revenueGoal === opt.value ? "is-active" : ""}`}
+									onClick={() => update("revenueGoal", opt.value)}
+								>
+									<span className="hc-option__label">{opt.label}</span>
+									{opt.hint ? (
+										<span className="hc-option__hint">{opt.hint}</span>
+									) : null}
+								</button>
+							))}
+						</div>
+					</section>
+				) : null}
+
+				{/* STEP 2 — Kapital */}
+				{step === 2 ? (
+					<section className="hc-step">
+						<h1 className="hc-step__title">
+							Wie viel Kapital hast du verfügbar?
+						</h1>
+						<p className="hc-step__lead">
+							Nur ehrliche Antworten — wir empfehlen kein Coaching, das
+							sich nicht trägt.
+						</p>
+						<div className="hc-options">
+							{CAPITAL_OPTIONS.map((opt) => (
+								<button
+									key={opt.value}
+									type="button"
+									className={`hc-option ${data.capital === opt.value ? "is-active" : ""}`}
+									onClick={() => update("capital", opt.value)}
+								>
+									<span className="hc-option__label">{opt.label}</span>
+									{opt.hint ? (
+										<span className="hc-option__hint">{opt.hint}</span>
+									) : null}
+								</button>
+							))}
+						</div>
+					</section>
+				) : null}
+
+				{/* STEP 3 — Motivation / Freitext */}
+				{step === 3 ? (
+					<section className="hc-step">
+						<h1 className="hc-step__title">
+							Was ist der wichtigste Grund warum du jetzt startest?
+						</h1>
+						<p className="hc-step__lead">
+							2–3 Sätze reichen — hilft uns, das Gespräch vorzubereiten.
+						</p>
+						<textarea
+							className="hc-textarea"
+							rows={6}
+							value={data.goal}
+							onChange={(e) => update("goal", e.target.value)}
+							placeholder="z. B. Ich möchte in 12 Monaten Vollzeit auf Amazon umsteigen, habe aktuell ein Produkt im Visier aber Angst vor PPC …"
+						/>
+						{disqualified ? (
+							<div className="hc-warn">
+								Mit deinem aktuellen Ziel & Budget ist 1:1-Coaching meist
+								nicht der schnellste Weg — schau dir lieber unsere
+								KI-Tools auf{" "}
+								<a
+									href="https://ai.huntecom.com"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									ai.huntecom.com
+								</a>{" "}
+								an. Du kannst trotzdem ein Gespräch buchen, aber wir wollen
+								ehrlich sein.
+							</div>
+						) : null}
+					</section>
+				) : null}
+
+				{/* STEP 4 — Kontaktdaten, dann automatisch CRM + Calendly */}
+				{step === 4 ? (
+					<section className="hc-step">
+						<h1 className="hc-step__title">Wie erreichen wir dich?</h1>
+						<p className="hc-step__lead">
+							Fast geschafft. Mit „Anfrage absenden“ speichern wir deine Daten
+							im CRM und öffnen direkt danach den Kalender für dein
+							Erstgespräch.
 						</p>
 						<div className="hc-grid">
 							<label className="hc-field">
@@ -342,142 +503,72 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 									autoComplete="email"
 									value={data.email}
 									onChange={(e) => update("email", e.target.value)}
-									placeholder="max@firma.de"
+									placeholder="name@firma.de"
 								/>
 							</label>
-							<label className="hc-field">
-								<span>Telefon</span>
-								<input
-									type="tel"
+							<div className="hc-field hc-field--full hc-phone">
+								<span>Telefon für Rückfragen</span>
+								<span className="hc-field-hint">
+									Optional — Land über die Flagge wählen, Nummer
+									international gültig.
+								</span>
+								<PhoneInput
+									international
+									defaultCountry="DE"
+									labels={deLabels}
+									value={data.phone || undefined}
+									onChange={(v) => update("phone", v ?? "")}
+									placeholder="z. B. 170 1234567"
+									className="hc-phone-input"
 									autoComplete="tel"
-									value={data.phone}
-									onChange={(e) => update("phone", e.target.value)}
-									placeholder="+49 …"
+									aria-label="Telefonnummer"
 								/>
-							</label>
-							<label className="hc-field">
-								<span>Instagram</span>
+							</div>
+							<label className="hc-field hc-field--full">
+								<span>Link (optional)</span>
+								<span className="hc-field-hint">
+									z. B. Website oder Social-Profil — freiwillig.
+								</span>
 								<input
 									type="text"
-									value={data.instagram}
-									onChange={(e) => update("instagram", e.target.value)}
-									placeholder="@dein_handle"
+									autoComplete="url"
+									inputMode="url"
+									value={data.link}
+									onChange={(e) => update("link", e.target.value)}
+									placeholder="https://…"
 								/>
+							</label>
+							<label className="hc-consent hc-field--full">
+								<input
+									type="checkbox"
+									checked={data.contactConsent}
+									onChange={(e) =>
+										update("contactConsent", e.target.checked)
+									}
+									className="hc-consent__checkbox"
+								/>
+								<span className="hc-consent__text">
+									Ich bestätige, die{" "}
+									<a
+										href="/datenschutz"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										Datenschutzerklärung
+									</a>{" "}
+									von Huntecom zur Kenntnis genommen zu haben und bin damit
+									einverstanden, im Zusammenhang mit dieser Anfrage per E-Mail
+									und Telefon von Huntecom kontaktiert zu werden.{" "}
+									<span className="hc-consent__required" aria-hidden="true">
+										*
+									</span>
+								</span>
 							</label>
 						</div>
 					</section>
 				) : null}
 
-				{/* STEP 1 — current experience */}
-				{step === 1 ? (
-					<section className="hc-step">
-						<h1 className="hc-step__title">Wo stehst du gerade?</h1>
-						<p className="hc-step__lead">Damit wir wissen, womit wir starten.</p>
-						<div className="hc-options">
-							{EXPERIENCE_OPTIONS.map((opt) => (
-								<button
-									key={opt.value}
-									type="button"
-									className={`hc-option ${data.experience === opt.value ? "is-active" : ""}`}
-									onClick={() => update("experience", opt.value)}
-								>
-									<span className="hc-option__label">{opt.label}</span>
-									{opt.hint ? (
-										<span className="hc-option__hint">{opt.hint}</span>
-									) : null}
-								</button>
-							))}
-						</div>
-					</section>
-				) : null}
-
-				{/* STEP 2 — revenue goal */}
-				{step === 2 ? (
-					<section className="hc-step">
-						<h1 className="hc-step__title">
-							Was willst du monatlich verdienen?
-						</h1>
-						<p className="hc-step__lead">
-							Realistisches Ziel auf 12-Monats-Sicht.
-						</p>
-						<div className="hc-options">
-							{REVENUE_OPTIONS.map((opt) => (
-								<button
-									key={opt.value}
-									type="button"
-									className={`hc-option ${data.revenueGoal === opt.value ? "is-active" : ""}`}
-									onClick={() => update("revenueGoal", opt.value)}
-								>
-									<span className="hc-option__label">{opt.label}</span>
-									{opt.hint ? (
-										<span className="hc-option__hint">{opt.hint}</span>
-									) : null}
-								</button>
-							))}
-						</div>
-					</section>
-				) : null}
-
-				{/* STEP 3 — capital */}
-				{step === 3 ? (
-					<section className="hc-step">
-						<h1 className="hc-step__title">
-							Wie viel Kapital hast du verfügbar?
-						</h1>
-						<p className="hc-step__lead">
-							Nur ehrliche Antworten — wir empfehlen kein Coaching, das
-							sich nicht trägt.
-						</p>
-						<div className="hc-options">
-							{CAPITAL_OPTIONS.map((opt) => (
-								<button
-									key={opt.value}
-									type="button"
-									className={`hc-option ${data.capital === opt.value ? "is-active" : ""}`}
-									onClick={() => update("capital", opt.value)}
-								>
-									<span className="hc-option__label">{opt.label}</span>
-									{opt.hint ? (
-										<span className="hc-option__hint">{opt.hint}</span>
-									) : null}
-								</button>
-							))}
-						</div>
-					</section>
-				) : null}
-
-				{/* STEP 4 — open question */}
-				{step === 4 ? (
-					<section className="hc-step">
-						<h1 className="hc-step__title">
-							Was ist der wichtigste Grund warum du jetzt startest?
-						</h1>
-						<p className="hc-step__lead">
-							2-3 Sätze reichen — hilft mir das Gespräch vorzubereiten.
-						</p>
-						<textarea
-							className="hc-textarea"
-							rows={6}
-							value={data.goal}
-							onChange={(e) => update("goal", e.target.value)}
-							placeholder="z.B. Ich möchte in 12 Monaten Vollzeit auf Amazon umsteigen, habe aktuell ein Produkt im Visier aber Angst vor PPC …"
-						/>
-						{disqualified ? (
-							<div className="hc-warn">
-								Mit deinem aktuellen Ziel & Budget ist 1:1-Coaching meist
-								nicht der schnellste Weg — schau dir lieber unsere
-								KI-Tools auf{" "}
-								<a href="https://ai.huntecom.com" rel="noopener">
-									ai.huntecom.com
-								</a>{" "}
-								an. Du kannst trotzdem ein Gespräch buchen, aber wir wollen
-								ehrlich sein.
-							</div>
-						) : null}
-					</section>
-				) : null}
-
-				{/* STEP 5 — submitting */}
+				{/* STEP 5 — Übermitteln (useEffect → submit → Calendly) */}
 				{step === TOTAL_STEPS ? (
 					<section className="hc-step hc-step--center">
 						<div className="hc-spinner" aria-hidden="true" />
@@ -506,22 +597,23 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 						<button
 							type="button"
 							className="hc-btn hc-btn--primary"
-							onClick={step === 4 ? () => setStep(TOTAL_STEPS) : next}
+							onClick={next}
 							disabled={submitting}
 						>
-							{step === 4
-								? "Anfrage absenden →"
-								: step === 0
-									? "Weiter →"
-									: "Weiter →"}
+							{step === 4 ? "Anfrage absenden →" : "Weiter →"}
 						</button>
 					</div>
 				) : null}
 
-				<div className="hc-trust">
-					🔒 Deine Daten sind verschlüsselt. Keine Werbung, kein Newsletter
-					ohne Opt-in.
-				</div>
+				<p className="hc-legal-foot">
+					<a href="/datenschutz" target="_blank" rel="noopener noreferrer">
+						Datenschutz
+					</a>
+					<span aria-hidden="true"> · </span>
+					<a href="/impressum" target="_blank" rel="noopener noreferrer">
+						Impressum
+					</a>
+				</p>
 			</div>
 		</div>
 	);
