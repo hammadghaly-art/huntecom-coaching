@@ -4,8 +4,11 @@ import Script from "next/script";
 import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import deLabels from "react-phone-number-input/locale/de.json";
 import "react-phone-number-input/style.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./funnel.css";
+
+/** React Strict Mode (dev) mounts twice — verhindert doppelten CRM-POST */
+let coachingLeadSubmitInFlight = false;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // COACHING QUALIFICATION FUNNEL
@@ -125,6 +128,7 @@ export function CoachingFunnel({
 	const [data, setData] = useState<FormState>(INITIAL);
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const handledStepRef = useRef<number | null>(null);
 	/** Wenn `/brand/…` fehlt oder nicht lädt: stabiles „H“-Fallback wie zuvor. */
 	const [brandLogoOk, setBrandLogoOk] = useState(true);
 
@@ -190,6 +194,8 @@ export function CoachingFunnel({
 	}
 
 	async function submit() {
+		if (coachingLeadSubmitInFlight) return;
+		coachingLeadSubmitInFlight = true;
 		setError(null);
 		setSubmitting(true);
 		const eventId = generateEventId();
@@ -219,6 +225,7 @@ export function CoachingFunnel({
 					firstName: data.firstName.trim(),
 					lastName: data.lastName.trim(),
 					phone: data.phone.trim(),
+					submissionChannel: "next",
 					workspace: "huntecom",
 					formId: "coaching_apply",
 					notes: data.goal.trim() || undefined,
@@ -244,11 +251,23 @@ export function CoachingFunnel({
 				}),
 			});
 			if (!res.ok) {
-				throw new Error(`Server error ${res.status}`);
+				let detail = "";
+				try {
+					const j = (await res.json()) as { error?: string };
+					if (j?.error) detail = ` (${j.error})`;
+				} catch {
+					// ignore
+				}
+				throw new Error(`HTTP ${res.status}${detail}`);
 			}
 		} catch (err) {
 			console.error("Lead submit failed", err);
-			setError("Übertragung fehlgeschlagen — bitte versuche es nochmal.");
+			coachingLeadSubmitInFlight = false;
+			const msg =
+				err instanceof TypeError
+					? "Netzwerkfehler — bitte Verbindung prüfen oder später erneut versuchen (evtl. blockiert der Browser die Anfrage)."
+					: "Übertragung fehlgeschlagen — bitte versuche es nochmal.";
+			setError(msg);
 			setSubmitting(false);
 			setStep(4);
 			return;
@@ -268,9 +287,13 @@ export function CoachingFunnel({
 
 	// Step 5: Auto-CRMPush + Weiterleitung Calendly nach gültigen Kontaktdaten.
 	useEffect(() => {
-		if (step === TOTAL_STEPS) {
-			submit();
+		if (step !== TOTAL_STEPS) {
+			handledStepRef.current = null;
+			return;
 		}
+		if (handledStepRef.current === TOTAL_STEPS) return;
+		handledStepRef.current = TOTAL_STEPS;
+		submit();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [step]);
 
