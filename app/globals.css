@@ -36,7 +36,7 @@ body.huntecom-body {
 	inset: 0;
 	z-index: 100000;
 	background: rgba(0, 0, 0, 0.92);
-	overflow-y: auto;
+	overflow: hidden;
 	-webkit-overflow-scrolling: touch;
 }
 
@@ -46,30 +46,55 @@ body.huntecom-body {
 	right: 0.75rem;
 	z-index: 100001;
 	box-sizing: border-box;
+	display: grid;
+	place-items: center;
 	min-width: 48px;
 	min-height: 48px;
-	padding: 0 0.5rem;
-	border: 1px solid rgba(255, 255, 255, 0.25);
-	border-radius: 8px;
-	background: rgba(10, 10, 10, 0.85);
-	color: #fff;
-	font-size: 1.75rem;
-	line-height: 1;
+	padding: 0;
+	border: 1px solid rgba(148, 163, 184, 0.28);
+	border-radius: 10px;
+	background: rgba(15, 23, 42, 0.92);
+	color: #e2e8f0;
 	cursor: pointer;
+	transition:
+		background 0.15s,
+		border-color 0.15s,
+		color 0.15s;
+}
+.huntecom-funnel-overlay__close svg {
+	width: 1.25rem;
+	height: 1.25rem;
+	stroke-width: 2;
 }
 
 .huntecom-funnel-overlay__close:hover {
-	background: rgba(30, 30, 30, 0.95);
+	background: rgba(30, 41, 59, 0.95);
+	border-color: rgba(56, 189, 248, 0.35);
+	color: #7dd3fc;
 }
 
 .huntecom-funnel-overlay__close:focus-visible {
-	outline: 2px solid #c9a86a;
+	outline: 2px solid rgba(56, 189, 248, 0.65);
 	outline-offset: 2px;
 }
 
 .huntecom-funnel-overlay__scroll {
+	box-sizing: border-box;
+	height: 100dvh;
 	min-height: 100dvh;
-	padding: 3.25rem 1rem 2rem;
+	max-height: 100dvh;
+	padding: 3.25rem clamp(0.75rem, 3vw, 1.25rem) 1rem;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Scroll nur in der Funnel-Shell; kein zweites Overlay-Scrolling */
+.huntecom-funnel-overlay__scroll .hc-funnel {
+	max-height: 100%;
+	min-height: 0;
+	width: 100%;
 }
 
 .huntecom-funnel-sr-only {

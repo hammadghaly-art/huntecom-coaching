@@ -5,6 +5,20 @@ import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
 import deLabels from "react-phone-number-input/locale/de.json";
 import "react-phone-number-input/style.css";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { LucideIcon } from "lucide-react";
+import {
+	BookOpen,
+	Crown,
+	Landmark,
+	LineChart,
+	Minus,
+	PiggyBank,
+	Rocket,
+	ShoppingBag,
+	TrendingDown,
+	TrendingUp,
+	Wallet,
+} from "lucide-react";
 import "./funnel.css";
 
 /** React Strict Mode (dev) mounts twice — verhindert doppelten CRM-POST */
@@ -59,24 +73,31 @@ const INITIAL: FormState = {
 	contactConsent: false,
 };
 
-const REVENUE_OPTIONS: { value: RevenueGoal; label: string; hint?: string }[] = [
-	{ value: "lt5k", label: "Unter 5.000 € / Monat" },
-	{ value: "5k_20k", label: "5.000 – 20.000 € / Monat" },
-	{ value: "20k_50k", label: "20.000 – 50.000 € / Monat" },
-	{ value: "50k_plus", label: "50.000+ € / Monat", hint: "Skalieren-Fokus" },
+type ChoiceOption<T extends string> = {
+	value: T;
+	label: string;
+	hint?: string;
+	Icon: LucideIcon;
+};
+
+const REVENUE_OPTIONS: ChoiceOption<RevenueGoal>[] = [
+	{ value: "lt5k", label: "Unter 5.000 € / Monat", Icon: TrendingDown },
+	{ value: "5k_20k", label: "5.000 – 20.000 € / Monat", Icon: Minus },
+	{ value: "20k_50k", label: "20.000 – 50.000 € / Monat", Icon: TrendingUp },
+	{ value: "50k_plus", label: "50.000+ € / Monat", hint: "Skalieren-Fokus", Icon: Rocket },
 ];
 
-const CAPITAL_OPTIONS: { value: Capital; label: string; hint?: string }[] = [
-	{ value: "lt5k", label: "Unter 5.000 €" },
-	{ value: "5k_15k", label: "5.000 – 15.000 €" },
-	{ value: "15k_50k", label: "15.000 – 50.000 €" },
-	{ value: "50k_plus", label: "50.000+ €", hint: "Premium-Bereich" },
+const CAPITAL_OPTIONS: ChoiceOption<Capital>[] = [
+	{ value: "lt5k", label: "Unter 5.000 €", Icon: PiggyBank },
+	{ value: "5k_15k", label: "5.000 – 15.000 €", Icon: Wallet },
+	{ value: "15k_50k", label: "15.000 – 50.000 €", Icon: Landmark },
+	{ value: "50k_plus", label: "50.000+ €", hint: "Premium-Bereich", Icon: Crown },
 ];
 
-const EXPERIENCE_OPTIONS: { value: Experience; label: string; hint?: string }[] = [
-	{ value: "beginner", label: "Kompletter Anfänger", hint: "Noch nichts verkauft" },
-	{ value: "selling", label: "Habe schon verkauft", hint: "Läuft aber nicht rund" },
-	{ value: "scaling", label: "Mache Umsatz, will skalieren" },
+const EXPERIENCE_OPTIONS: ChoiceOption<Experience>[] = [
+	{ value: "beginner", label: "Kompletter Anfänger", hint: "Noch nichts verkauft", Icon: BookOpen },
+	{ value: "selling", label: "Habe schon verkauft", hint: "Läuft aber nicht rund", Icon: ShoppingBag },
+	{ value: "scaling", label: "Mache Umsatz, will skalieren", Icon: LineChart },
 ];
 
 function readUtmFromUrl(): Record<string, string> {
@@ -372,29 +393,35 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 							Bewirb dich um dein 1:1 Coaching
 						</h1>
 						<p className="hc-step__lead">
-							Zuerst ein paar Fragen zu deiner Situation — Kontaktdaten und
-							Kalender kommen am Ende. Neue 1:1-Begleitungen sind bei uns
-							bewusst <strong>limitiert verfügbar</strong>, damit die Betreuung
-							fokussiert bleibt.
+							Kurz deine Situation — Kontakt und Kalender folgen am Ende.
+							1:1-Plätze sind bewusst <strong>limitiert</strong>.
 						</p>
 						<h2 className="hc-step__subtitle">Wo stehst du gerade?</h2>
 						<p className="hc-step__lead hc-step__lead--tight">
 							Damit wir wissen, womit wir starten.
 						</p>
 						<div className="hc-options">
-							{EXPERIENCE_OPTIONS.map((opt) => (
-								<button
-									key={opt.value}
-									type="button"
-									className={`hc-option ${data.experience === opt.value ? "is-active" : ""}`}
-									onClick={() => update("experience", opt.value)}
-								>
-									<span className="hc-option__label">{opt.label}</span>
-									{opt.hint ? (
-										<span className="hc-option__hint">{opt.hint}</span>
-									) : null}
-								</button>
-							))}
+							{EXPERIENCE_OPTIONS.map((opt) => {
+								const Icon = opt.Icon;
+								return (
+									<button
+										key={opt.value}
+										type="button"
+										className={`hc-option ${data.experience === opt.value ? "is-active" : ""}`}
+										onClick={() => update("experience", opt.value)}
+									>
+										<span className="hc-option__icon-wrap">
+											<Icon className="hc-option__icon" strokeWidth={1.75} aria-hidden />
+										</span>
+										<span className="hc-option__text">
+											<span className="hc-option__label">{opt.label}</span>
+											{opt.hint ? (
+												<span className="hc-option__hint">{opt.hint}</span>
+											) : null}
+										</span>
+									</button>
+								);
+							})}
 						</div>
 					</section>
 				) : null}
@@ -409,19 +436,27 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 							Realistisches Ziel auf 12-Monats-Sicht.
 						</p>
 						<div className="hc-options">
-							{REVENUE_OPTIONS.map((opt) => (
-								<button
-									key={opt.value}
-									type="button"
-									className={`hc-option ${data.revenueGoal === opt.value ? "is-active" : ""}`}
-									onClick={() => update("revenueGoal", opt.value)}
-								>
-									<span className="hc-option__label">{opt.label}</span>
-									{opt.hint ? (
-										<span className="hc-option__hint">{opt.hint}</span>
-									) : null}
-								</button>
-							))}
+							{REVENUE_OPTIONS.map((opt) => {
+								const Icon = opt.Icon;
+								return (
+									<button
+										key={opt.value}
+										type="button"
+										className={`hc-option ${data.revenueGoal === opt.value ? "is-active" : ""}`}
+										onClick={() => update("revenueGoal", opt.value)}
+									>
+										<span className="hc-option__icon-wrap">
+											<Icon className="hc-option__icon" strokeWidth={1.75} aria-hidden />
+										</span>
+										<span className="hc-option__text">
+											<span className="hc-option__label">{opt.label}</span>
+											{opt.hint ? (
+												<span className="hc-option__hint">{opt.hint}</span>
+											) : null}
+										</span>
+									</button>
+								);
+							})}
 						</div>
 					</section>
 				) : null}
@@ -437,19 +472,27 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 							sich nicht trägt.
 						</p>
 						<div className="hc-options">
-							{CAPITAL_OPTIONS.map((opt) => (
-								<button
-									key={opt.value}
-									type="button"
-									className={`hc-option ${data.capital === opt.value ? "is-active" : ""}`}
-									onClick={() => update("capital", opt.value)}
-								>
-									<span className="hc-option__label">{opt.label}</span>
-									{opt.hint ? (
-										<span className="hc-option__hint">{opt.hint}</span>
-									) : null}
-								</button>
-							))}
+							{CAPITAL_OPTIONS.map((opt) => {
+								const Icon = opt.Icon;
+								return (
+									<button
+										key={opt.value}
+										type="button"
+										className={`hc-option ${data.capital === opt.value ? "is-active" : ""}`}
+										onClick={() => update("capital", opt.value)}
+									>
+										<span className="hc-option__icon-wrap">
+											<Icon className="hc-option__icon" strokeWidth={1.75} aria-hidden />
+										</span>
+										<span className="hc-option__text">
+											<span className="hc-option__label">{opt.label}</span>
+											{opt.hint ? (
+												<span className="hc-option__hint">{opt.hint}</span>
+											) : null}
+										</span>
+									</button>
+								);
+							})}
 						</div>
 					</section>
 				) : null}
@@ -465,7 +508,7 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 						</p>
 						<textarea
 							className="hc-textarea"
-							rows={6}
+							rows={4}
 							value={data.goal}
 							onChange={(e) => update("goal", e.target.value)}
 							placeholder="z. B. Ich möchte in 12 Monaten Vollzeit auf Amazon umsteigen, habe aktuell ein Produkt im Visier aber Angst vor PPC …"

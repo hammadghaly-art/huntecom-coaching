@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useCallback, useEffect, useId, useState } from "react";
 import { CoachingFunnel } from "./coaching/funnel";
 
@@ -70,7 +71,7 @@ export default function HomeClient({ calendlyUrl, leadApiUrl, metaPixelId }: Hom
 						onClick={closeFunnel}
 						aria-label="Formular schließen"
 					>
-						×
+						<X aria-hidden />
 					</button>
 					<div className="huntecom-funnel-overlay__scroll">
 						<span id={titleId} className="huntecom-funnel-sr-only">
