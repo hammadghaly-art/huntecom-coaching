@@ -149,11 +149,30 @@ export function CoachingFunnel({
 	const [data, setData] = useState<FormState>(INITIAL);
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [submitUiProgress, setSubmitUiProgress] = useState(0);
+	const [submitStatusLabel, setSubmitStatusLabel] = useState("");
 	const handledStepRef = useRef<number | null>(null);
+	const submitProgressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+		null,
+	);
+	const submitAnimPhaseRef = useRef(0);
 	/** Wenn `/brand/…` fehlt oder nicht lädt: stabiles „H“-Fallback wie zuvor. */
 	const [brandLogoOk, setBrandLogoOk] = useState(true);
 
 	const utm = useMemo(() => readUtmFromUrl(), []);
+
+	function clearSubmitProgressAnimation() {
+		if (submitProgressIntervalRef.current) {
+			clearInterval(submitProgressIntervalRef.current);
+			submitProgressIntervalRef.current = null;
+		}
+	}
+
+	useEffect(() => {
+		return () => {
+			clearSubmitProgressAnimation();
+		};
+	}, []);
 
 	// Surface a friendly disqualification — we never hard-block, we just
 	// route low-end into a different funnel (tools/free content) instead
@@ -162,7 +181,12 @@ export function CoachingFunnel({
 		data.revenueGoal === "lt5k" || data.capital === "lt5k";
 
 	const TOTAL_STEPS = 5;
-	const progress = Math.round((step / TOTAL_STEPS) * 100);
+	const progress = useMemo(() => {
+		if (step < TOTAL_STEPS) {
+			return Math.round(((step + 1) / 5) * 70);
+		}
+		return Math.min(100, Math.round(70 + (submitUiProgress / 100) * 30));
+	}, [step, submitUiProgress]);
 
 	function update<K extends keyof FormState>(key: K, value: FormState[K]) {
 		setData((d) => ({ ...d, [key]: value }));
@@ -171,29 +195,29 @@ export function CoachingFunnel({
 	function next() {
 		setError(null);
 		if (step === 0 && !data.experience) {
-			setError("Bitte wähle einen Punkt.");
+			setError("Bitte wähle eine Option, um fortzufahren.");
 			return;
 		}
 		if (step === 1 && !data.revenueGoal) {
-			setError("Bitte wähle dein Ziel.");
+			setError("Bitte wähle ein Umsatzniveau.");
 			return;
 		}
 		if (step === 2 && !data.capital) {
-			setError("Bitte wähle einen Punkt.");
+			setError("Bitte gib dein verfügbares Budget an.");
 			return;
 		}
 		if (step === 4) {
 			if (!data.firstName.trim() || !data.email.trim()) {
-				setError("Bitte Name und E-Mail eintragen.");
+				setError("Bitte Vorname und E-Mail-Adresse ausfüllen.");
 				return;
 			}
 			if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-				setError("E-Mail-Adresse sieht nicht richtig aus.");
+				setError("Bitte gib eine gültige E-Mail-Adresse ein.");
 				return;
 			}
 			if (data.phone.trim() && !isPossiblePhoneNumber(data.phone)) {
 				setError(
-					"Die Telefonnummer ist unvollständig — bitte prüfen oder Feld leer lassen.",
+					"Die Telefonnummer ist unvollständig. Bitte prüfen oder das Feld freilassen.",
 				);
 				return;
 			}
@@ -219,6 +243,30 @@ export function CoachingFunnel({
 		coachingLeadSubmitInFlight = true;
 		setError(null);
 		setSubmitting(true);
+		clearSubmitProgressAnimation();
+		submitAnimPhaseRef.current = 0;
+		setSubmitUiProgress(4);
+		setSubmitStatusLabel(
+			"Schritt 1 von 2: Deine Angaben werden sicher übertragen …",
+		);
+		submitProgressIntervalRef.current = setInterval(() => {
+			setSubmitUiProgress((p) => {
+				const next =
+					p < 84 ? Math.min(84, p + 2 + Math.random() * 5) : p;
+				if (next > 32 && submitAnimPhaseRef.current < 1) {
+					submitAnimPhaseRef.current = 1;
+					setSubmitStatusLabel(
+						"Schritt 1 von 2: Antwort vom Server wird geprüft …",
+					);
+				} else if (next > 62 && submitAnimPhaseRef.current < 2) {
+					submitAnimPhaseRef.current = 2;
+					setSubmitStatusLabel(
+						"Schritt 1 von 2: Terminkalender wird bereitgestellt …",
+					);
+				}
+				return next;
+			});
+		}, 200);
 		const eventId = generateEventId();
 
 		// Fire Meta-Pixel client-side (CAPI server-side fires from /api/crm/lead
@@ -284,15 +332,24 @@ export function CoachingFunnel({
 		} catch (err) {
 			console.error("Lead submit failed", err);
 			coachingLeadSubmitInFlight = false;
+			clearSubmitProgressAnimation();
+			submitAnimPhaseRef.current = 0;
+			setSubmitUiProgress(0);
+			setSubmitStatusLabel("");
 			const msg =
 				err instanceof TypeError
-					? "Netzwerkfehler — bitte Verbindung prüfen oder später erneut versuchen (evtl. blockiert der Browser die Anfrage)."
-					: "Übertragung fehlgeschlagen — bitte versuche es nochmal.";
+					? "Netzwerkfehler: Bitte Verbindung prüfen oder später erneut versuchen. In manchen Browsern blockiert eine Erweiterung die Anfrage."
+					: "Die Übertragung ist fehlgeschlagen. Bitte versuche es erneut.";
 			setError(msg);
 			setSubmitting(false);
 			setStep(4);
 			return;
 		}
+
+		clearSubmitProgressAnimation();
+		setSubmitUiProgress(100);
+		setSubmitStatusLabel("Schritt 2 von 2: Weiterleitung zum Kalender …");
+		await new Promise((r) => setTimeout(r, 420));
 
 		// Redirect to Calendly with prefilled name + email. Calendly accepts
 		// `name`, `email`, `a1` (custom q1), … via query string.
@@ -349,17 +406,28 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 				</>
 			) : null}
 
-			<div className="hc-funnel__shell">
-				<div className="hc-funnel__progress">
+			<div
+				className="hc-funnel__shell"
+				aria-busy={step === TOTAL_STEPS}
+			>
+				<div
+					className={`hc-funnel__progress${step === TOTAL_STEPS ? " hc-funnel__progress--active" : ""}`}
+				>
 					<div
 						className="hc-funnel__progress-bar"
 						style={{ width: `${progress}%` }}
 						aria-valuenow={progress}
 						aria-valuemin={0}
 						aria-valuemax={100}
+						aria-label={`Formularfortschritt ${progress} Prozent`}
 						role="progressbar"
 					/>
 				</div>
+				{step < TOTAL_STEPS ? (
+					<p className="hc-funnel__step-meta" aria-live="polite">
+						Schritt {step + 1} von 5
+					</p>
+				) : null}
 
 				<div className="hc-funnel__brand">
 					<div className="hc-funnel__brand-logo-wrap">
@@ -390,15 +458,16 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 				{step === 0 ? (
 					<section className="hc-step">
 						<h1 className="hc-step__title">
-							Bewirb dich um dein 1:1 Coaching
+							Persönliches 1:1-Coaching anfragen
 						</h1>
 						<p className="hc-step__lead">
-							Kurz deine Situation — Kontakt und Kalender folgen am Ende.
-							1:1-Plätze sind bewusst <strong>limitiert</strong>.
+							Kurze, gezielte Fragen zu deiner Ausgangslage. Kontaktdaten und
+							Terminwahl folgen zum Schluss. Unsere 1:1-Kapazität ist bewusst{" "}
+							<strong>begrenzt</strong>.
 						</p>
-						<h2 className="hc-step__subtitle">Wo stehst du gerade?</h2>
+						<h2 className="hc-step__subtitle">Wo stehst du heute?</h2>
 						<p className="hc-step__lead hc-step__lead--tight">
-							Damit wir wissen, womit wir starten.
+							So ordnen wir dein Profil sinnvoll ein.
 						</p>
 						<div className="hc-options">
 							{EXPERIENCE_OPTIONS.map((opt) => {
@@ -430,10 +499,11 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 				{step === 1 ? (
 					<section className="hc-step">
 						<h1 className="hc-step__title">
-							Was willst du monatlich verdienen?
+							Welches monatliche Umsatzniveau strebst du an?
 						</h1>
 						<p className="hc-step__lead">
-							Realistisches Ziel auf 12-Monats-Sicht.
+							Bezogen auf die nächsten zwölf Monate — bitte realistisch
+							einschätzen.
 						</p>
 						<div className="hc-options">
 							{REVENUE_OPTIONS.map((opt) => {
@@ -465,11 +535,11 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 				{step === 2 ? (
 					<section className="hc-step">
 						<h1 className="hc-step__title">
-							Wie viel Kapital hast du verfügbar?
+							Welches Budget kannst du derzeit einplanen?
 						</h1>
 						<p className="hc-step__lead">
-							Nur ehrliche Antworten — wir empfehlen kein Coaching, das
-							sich nicht trägt.
+							Ehrliche Angaben ermöglichen eine sinnvolle Einschätzung. Wir
+							empfehlen kein Coaching, das sich wirtschaftlich nicht trägt.
 						</p>
 						<div className="hc-options">
 							{CAPITAL_OPTIONS.map((opt) => {
@@ -501,23 +571,24 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 				{step === 3 ? (
 					<section className="hc-step">
 						<h1 className="hc-step__title">
-							Was ist der wichtigste Grund warum du jetzt startest?
+							Warum startest du gerade jetzt?
 						</h1>
 						<p className="hc-step__lead">
-							2–3 Sätze reichen — hilft uns, das Gespräch vorzubereiten.
+							Zwei bis drei Sätze reichen — so bereiten wir das Erstgespräch
+							fokussiert vor.
 						</p>
 						<textarea
 							className="hc-textarea"
 							rows={4}
 							value={data.goal}
 							onChange={(e) => update("goal", e.target.value)}
-							placeholder="z. B. Ich möchte in 12 Monaten Vollzeit auf Amazon umsteigen, habe aktuell ein Produkt im Visier aber Angst vor PPC …"
+							placeholder="z. B. Ich möchte innerhalb von 12 Monaten den Schritt in Vollzeit wagen, habe ein Produkt in Aussicht und möchte PPC sauber aufsetzen …"
 						/>
 						{disqualified ? (
 							<div className="hc-warn">
-								Mit deinem aktuellen Ziel & Budget ist 1:1-Coaching meist
-								nicht der schnellste Weg — schau dir lieber unsere
-								KI-Tools auf{" "}
+								Bei sehr niedrigem Ziel- und Budgetrahmen ist klassisches 1:1
+								Coaching oft nicht der effizienteste Einstieg — unsere Tools
+								auf{" "}
 								<a
 									href="https://ai.huntecom.com"
 									target="_blank"
@@ -525,8 +596,8 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 								>
 									ai.huntecom.com
 								</a>{" "}
-								an. Du kannst trotzdem ein Gespräch buchen, aber wir wollen
-								ehrlich sein.
+								können der passendere erste Schritt sein. Du kannst dennoch
+								terminieren; wir gehen transparent mit Erwartungen um.
 							</div>
 						) : null}
 					</section>
@@ -535,11 +606,12 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 				{/* STEP 4 — Kontaktdaten, dann automatisch CRM + Calendly */}
 				{step === 4 ? (
 					<section className="hc-step">
-						<h1 className="hc-step__title">Wie erreichen wir dich?</h1>
+						<h1 className="hc-step__title">
+							Wie erreichen wir dich zuverlässig?
+						</h1>
 						<p className="hc-step__lead">
-							Fast geschafft. Mit „Anfrage absenden“ speichern wir deine Daten
-							im CRM und öffnen direkt danach den Kalender für dein
-							Erstgespräch.
+							Zum Abschluss: Mit einem Klick sendest du die Anfrage. Anschließend
+							öffnet sich der Kalender für dein Erstgespräch.
 						</p>
 						<div className="hc-grid">
 							<label className="hc-field">
@@ -636,12 +708,37 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 
 				{/* STEP 5 — Übermitteln (useEffect → submit → Calendly) */}
 				{step === TOTAL_STEPS ? (
-					<section className="hc-step hc-step--center">
-						<div className="hc-spinner" aria-hidden="true" />
-						<h1 className="hc-step__title">Deine Anfrage wird übermittelt …</h1>
-						<p className="hc-step__lead">
-							Gleich öffnet sich der Kalender, damit du dein Erstgespräch
-							buchst.
+					<section
+						className="hc-step hc-step--center hc-step--submitting"
+						aria-busy="true"
+					>
+						<p className="hc-sr-live" aria-live="polite">
+							{submitStatusLabel} Fortschritt etwa{" "}
+							{Math.round(Math.max(0, Math.min(100, submitUiProgress)))}{" "}
+							Prozent.
+						</p>
+						<div className="hc-submit-visual" aria-hidden="true">
+							<div className="hc-submit-ring" />
+						</div>
+						<h1 className="hc-step__title">Deine Anfrage wird bearbeitet</h1>
+						<p className="hc-submit-status">{submitStatusLabel}</p>
+						<div className="hc-submit-track" aria-hidden="true">
+							<div
+								className="hc-submit-track__fill"
+								style={{
+									width: `${Math.max(6, Math.min(100, submitUiProgress))}%`,
+								}}
+							/>
+						</div>
+						<p className="hc-step__lead hc-step__lead--hint">
+							In der Regel dauert das wenige Sekunden. Bitte dieses Fenster
+							nicht schließen.
+						</p>
+						<p className="hc-submit-pct" aria-hidden="true">
+							{Math.round(
+								Math.max(0, Math.min(100, submitUiProgress)),
+							)}{" "}
+							%
 						</p>
 					</section>
 				) : null}
@@ -666,7 +763,9 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 							onClick={next}
 							disabled={submitting}
 						>
-							{step === 4 ? "Anfrage absenden →" : "Weiter →"}
+							{step === 4
+								? "Anfrage senden und Kalender öffnen →"
+								: "Weiter →"}
 						</button>
 					</div>
 				) : null}
