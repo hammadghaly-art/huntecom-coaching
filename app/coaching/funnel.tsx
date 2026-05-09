@@ -7,14 +7,14 @@ import "react-phone-number-input/style.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
-	BookOpen,
+	BarChart3,
+	BookMarked,
 	Crown,
 	Landmark,
-	LineChart,
 	Minus,
 	PiggyBank,
 	Rocket,
-	ShoppingBag,
+	Store,
 	TrendingDown,
 	TrendingUp,
 	Wallet,
@@ -95,9 +95,24 @@ const CAPITAL_OPTIONS: ChoiceOption<Capital>[] = [
 ];
 
 const EXPERIENCE_OPTIONS: ChoiceOption<Experience>[] = [
-	{ value: "beginner", label: "Kompletter Anfänger", hint: "Noch nichts verkauft", Icon: BookOpen },
-	{ value: "selling", label: "Habe schon verkauft", hint: "Läuft aber nicht rund", Icon: ShoppingBag },
-	{ value: "scaling", label: "Mache Umsatz, will skalieren", Icon: LineChart },
+	{
+		value: "beginner",
+		label: "Kompletter Anfänger",
+		hint: "Noch nichts verkauft",
+		Icon: BookMarked,
+	},
+	{
+		value: "selling",
+		label: "Habe schon verkauft",
+		hint: "Läuft aber nicht rund",
+		Icon: Store,
+	},
+	{
+		value: "scaling",
+		label: "Mache Umsatz, will skalieren",
+		hint: "Fokus: Skalierung, Team & Prozesse",
+		Icon: BarChart3,
+	},
 ];
 
 function readUtmFromUrl(): Record<string, string> {
@@ -480,13 +495,13 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 										onClick={() => update("experience", opt.value)}
 									>
 										<span className="hc-option__icon-wrap">
-											<Icon className="hc-option__icon" strokeWidth={1.75} aria-hidden />
+											<Icon className="hc-option__icon" strokeWidth={2} aria-hidden />
 										</span>
 										<span className="hc-option__text">
 											<span className="hc-option__label">{opt.label}</span>
-											{opt.hint ? (
-												<span className="hc-option__hint">{opt.hint}</span>
-											) : null}
+											<span className="hc-option__hint">
+												{opt.hint ?? "\u00a0"}
+											</span>
 										</span>
 									</button>
 								);
@@ -516,13 +531,13 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 										onClick={() => update("revenueGoal", opt.value)}
 									>
 										<span className="hc-option__icon-wrap">
-											<Icon className="hc-option__icon" strokeWidth={1.75} aria-hidden />
+											<Icon className="hc-option__icon" strokeWidth={2} aria-hidden />
 										</span>
 										<span className="hc-option__text">
 											<span className="hc-option__label">{opt.label}</span>
-											{opt.hint ? (
-												<span className="hc-option__hint">{opt.hint}</span>
-											) : null}
+											<span className="hc-option__hint">
+												{opt.hint ?? "\u00a0"}
+											</span>
 										</span>
 									</button>
 								);
@@ -552,13 +567,13 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 										onClick={() => update("capital", opt.value)}
 									>
 										<span className="hc-option__icon-wrap">
-											<Icon className="hc-option__icon" strokeWidth={1.75} aria-hidden />
+											<Icon className="hc-option__icon" strokeWidth={2} aria-hidden />
 										</span>
 										<span className="hc-option__text">
 											<span className="hc-option__label">{opt.label}</span>
-											{opt.hint ? (
-												<span className="hc-option__hint">{opt.hint}</span>
-											) : null}
+											<span className="hc-option__hint">
+												{opt.hint ?? "\u00a0"}
+											</span>
 										</span>
 									</button>
 								);

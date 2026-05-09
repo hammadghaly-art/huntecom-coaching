@@ -35,12 +35,65 @@ body.huntecom-body {
 	position: fixed;
 	inset: 0;
 	z-index: 100000;
-	background:
-		radial-gradient(ellipse 100% 70% at 50% -5%, rgba(56, 189, 248, 0.09), transparent 50%),
-		radial-gradient(ellipse 80% 50% at 100% 100%, rgba(14, 165, 233, 0.06), transparent 45%),
-		rgba(0, 0, 0, 0.91);
 	overflow: hidden;
 	-webkit-overflow-scrolling: touch;
+	/* Premium glass: Webflow-iFrame schemenhaft durchscheinend */
+	backdrop-filter: blur(14px) saturate(168%);
+	-webkit-backdrop-filter: blur(14px) saturate(168%);
+	background:
+		radial-gradient(ellipse 130% 90% at 50% -18%, rgba(14, 165, 233, 0.22), transparent 55%),
+		radial-gradient(ellipse 85% 75% at 105% 8%, rgba(99, 102, 241, 0.18), transparent 48%),
+		radial-gradient(ellipse 75% 70% at -5% 92%, rgba(14, 165, 233, 0.14), transparent 45%),
+		radial-gradient(ellipse 60% 45% at 85% 88%, rgba(14, 165, 233, 0.08), transparent 42%),
+		linear-gradient(
+			168deg,
+			rgba(2, 6, 23, 0.62) 0%,
+			rgba(15, 23, 42, 0.74) 42%,
+			rgba(10, 15, 35, 0.78) 72%,
+			rgba(2, 6, 23, 0.82) 100%
+		);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.huntecom-funnel-overlay {
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+	}
+}
+
+/* Modal: äußere Fläche transparent → Verlauf + Frost kommt vom Overlay */
+.huntecom-funnel-overlay .hc-funnel {
+	background: none !important;
+	background-color: transparent !important;
+	background-image: none !important;
+}
+
+/* Formular-Karte: stärkeres Glasmorphism + feiner Randglanz */
+.huntecom-funnel-overlay .hc-funnel__shell {
+	background: linear-gradient(
+		152deg,
+		rgba(15, 23, 42, 0.4) 0%,
+		rgba(15, 23, 42, 0.36) 38%,
+		rgba(15, 23, 42, 0.5) 100%
+	) !important;
+	backdrop-filter: blur(28px) saturate(185%);
+	-webkit-backdrop-filter: blur(28px) saturate(185%);
+	box-shadow:
+		0 0 0 1px rgba(255, 255, 255, 0.11) inset,
+		0 0 0 1px rgba(14, 165, 233, 0.14) inset,
+		0 0 72px -14px rgba(14, 165, 233, 0.38),
+		0 8px 32px -8px rgba(0, 0, 0, 0.45),
+		0 36px 72px -20px rgba(0, 0, 0, 0.62) !important;
+}
+
+.huntecom-funnel-overlay .hc-funnel__shell::before {
+	background: linear-gradient(
+		138deg,
+		rgba(125, 211, 252, 0.38) 0%,
+		rgba(129, 140, 248, 0.18) 38%,
+		rgba(14, 165, 233, 0.32) 72%,
+		rgba(165, 180, 252, 0.14) 100%
+	) !important;
 }
 
 .huntecom-funnel-overlay__close {
@@ -54,9 +107,11 @@ body.huntecom-body {
 	min-width: 48px;
 	min-height: 48px;
 	padding: 0;
-	border: 1px solid rgba(148, 163, 184, 0.28);
-	border-radius: 10px;
-	background: rgba(15, 23, 42, 0.92);
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	border-radius: 12px;
+	background: rgba(15, 23, 42, 0.42);
+	backdrop-filter: blur(12px) saturate(150%);
+	-webkit-backdrop-filter: blur(12px) saturate(150%);
 	color: #e2e8f0;
 	cursor: pointer;
 	transition:
@@ -71,13 +126,13 @@ body.huntecom-body {
 }
 
 .huntecom-funnel-overlay__close:hover {
-	background: rgba(30, 41, 59, 0.95);
-	border-color: rgba(56, 189, 248, 0.35);
-	color: #7dd3fc;
+	background: rgba(30, 41, 59, 0.62);
+	border-color: rgba(14, 165, 233, 0.4);
+	color: #bae6fd;
 }
 
 .huntecom-funnel-overlay__close:focus-visible {
-	outline: 2px solid rgba(56, 189, 248, 0.65);
+	outline: 2px solid rgba(14, 165, 233, 0.55);
 	outline-offset: 2px;
 }
 
@@ -86,7 +141,7 @@ body.huntecom-body {
 	height: 100dvh;
 	min-height: 100dvh;
 	max-height: 100dvh;
-	padding: 3.25rem clamp(0.75rem, 3vw, 1.25rem) 1rem;
+	padding: clamp(2.85rem, 8vw, 3.35rem) clamp(0.65rem, 3vw, 1.25rem) max(0.65rem, env(safe-area-inset-bottom, 0px));
 	overflow: hidden;
 	display: flex;
 	align-items: center;
