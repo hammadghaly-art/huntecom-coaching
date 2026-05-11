@@ -15,3 +15,7 @@
 *.tsbuildinfo
 
 .vercel
+
+# Large hero video(s) — keep local; GitHub rejects >100MB. Use CDN or Git LFS for production.
+public/videos/*.mp4
+public/videos/*.mov
