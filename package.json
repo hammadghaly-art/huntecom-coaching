@@ -8,7 +8,8 @@
 		"build": "next build",
 		"start": "next start -p 3001",
 		"mirror": "node scripts/mirror-huntecom.cjs",
-		"patch:links": "node scripts/patch-huntecom-hrefs.mjs"
+		"patch:links": "node scripts/patch-huntecom-hrefs.mjs",
+		"video:hero": "python scripts/compress-coaching-hero.py"
 	},
 	"dependencies": {
 		"lucide-react": "0.469.0",

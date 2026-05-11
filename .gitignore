@@ -16,6 +16,8 @@
 
 .vercel
 
-# Large hero video(s) — keep local; GitHub rejects >100MB. Use CDN or Git LFS for production.
-public/videos/*.mp4
+# Hero-Video: fertige Datei public/videos/huntecom-coaching-hero.mp4 wird committed (<100 MB).
+# Große Roh-Uploads / Temp / Backup nicht ins Repo.
 public/videos/*.mov
+public/videos/huntecom-coaching-hero-source.mp4
+public/videos/huntecom-coaching-hero.tmp.mp4
