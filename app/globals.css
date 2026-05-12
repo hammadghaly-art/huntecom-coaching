@@ -37,20 +37,17 @@ body.huntecom-body {
 	z-index: 100000;
 	overflow: hidden;
 	-webkit-overflow-scrolling: touch;
-	/* Premium glass: Webflow-iFrame schemenhaft durchscheinend */
-	backdrop-filter: blur(18px) saturate(155%);
-	-webkit-backdrop-filter: blur(18px) saturate(155%);
+	/* Schwarzglas hinter dem Formular — neutral, ohne Blaustich */
+	backdrop-filter: blur(20px) saturate(118%);
+	-webkit-backdrop-filter: blur(20px) saturate(118%);
 	background:
-		radial-gradient(ellipse 130% 90% at 50% -18%, rgba(14, 165, 233, 0.14), transparent 55%),
-		radial-gradient(ellipse 85% 75% at 105% 8%, rgba(99, 102, 241, 0.12), transparent 48%),
-		radial-gradient(ellipse 75% 70% at -5% 92%, rgba(14, 165, 233, 0.08), transparent 45%),
-		radial-gradient(ellipse 60% 45% at 85% 88%, rgba(14, 165, 233, 0.05), transparent 42%),
+		radial-gradient(ellipse 120% 80% at 50% 0%, rgba(255, 255, 255, 0.04), transparent 52%),
+		radial-gradient(ellipse 90% 70% at 50% 100%, rgba(0, 0, 0, 0.45), transparent 55%),
 		linear-gradient(
 			168deg,
-			rgba(0, 0, 0, 0.72) 0%,
-			rgba(2, 6, 23, 0.82) 38%,
-			rgba(15, 23, 42, 0.86) 68%,
-			rgba(0, 0, 0, 0.88) 100%
+			rgba(0, 0, 0, 0.78) 0%,
+			rgba(10, 10, 12, 0.88) 45%,
+			rgba(0, 0, 0, 0.92) 100%
 		);
 }
 
@@ -70,32 +67,29 @@ body.huntecom-body {
 
 /* Formular-Karte — ohne ::before-Doppelrand; dunkler */
 .huntecom-funnel-overlay .hc-funnel__shell {
-	background-color: rgba(0, 0, 0, 0.72) !important;
+	background-color: rgba(0, 0, 0, 0.78) !important;
 	background-image:
-		radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.035) 1px, transparent 0),
+		radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.04) 1px, transparent 0),
 		repeating-linear-gradient(
 			-22deg,
 			transparent 0,
 			transparent 11px,
-			rgba(255, 255, 255, 0.012) 11px,
-			rgba(255, 255, 255, 0.012) 12px
+			rgba(255, 255, 255, 0.01) 11px,
+			rgba(255, 255, 255, 0.01) 12px
 		),
-		radial-gradient(ellipse 95% 65% at 50% 0%, rgba(14, 165, 233, 0.05), transparent 58%),
 		linear-gradient(
-			158deg,
-			rgba(0, 0, 0, 0.82) 0%,
-			rgba(2, 6, 23, 0.9) 45%,
-			rgba(15, 23, 42, 0.78) 72%,
-			rgba(0, 0, 0, 0.9) 100%
+			165deg,
+			rgba(12, 12, 14, 0.92) 0%,
+			rgba(0, 0, 0, 0.88) 48%,
+			rgba(8, 8, 10, 0.94) 100%
 		) !important;
 	background-size:
 		20px 20px,
 		100% 100%,
-		100% 100%,
 		100% 100% !important;
-	backdrop-filter: blur(36px) saturate(155%) !important;
-	-webkit-backdrop-filter: blur(36px) saturate(155%) !important;
-	border: 1px solid rgba(51, 65, 85, 0.55) !important;
+	backdrop-filter: blur(36px) saturate(118%) !important;
+	-webkit-backdrop-filter: blur(36px) saturate(118%) !important;
+	border: 1px solid rgba(55, 55, 58, 0.65) !important;
 	box-shadow:
 		0 0 0 1px rgba(255, 255, 255, 0.04) inset,
 		0 20px 48px -18px rgba(0, 0, 0, 0.78) !important;

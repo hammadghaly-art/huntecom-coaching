@@ -5,7 +5,7 @@
 
 .hc-funnel {
 	--hc-bg-deep: #000000;
-	--hc-bg-mid: #020617;
+	--hc-bg-mid: #0a0a0b;
 	--hc-dot: rgba(148, 163, 184, 0.065);
 	--hc-surface: rgba(0, 0, 0, 0.55);
 	--hc-surface-solid: #000000;
@@ -38,8 +38,8 @@
 	background-color: var(--hc-bg-deep);
 	background-image:
 		radial-gradient(circle at 1px 1px, var(--hc-dot) 1px, transparent 0),
-		radial-gradient(ellipse 100% 55% at 50% 0%, rgba(14, 165, 233, 0.05), transparent 52%),
-		linear-gradient(180deg, #000000 0%, var(--hc-bg-mid) 42%, #00040a 100%);
+		radial-gradient(ellipse 100% 50% at 50% 0%, rgba(255, 255, 255, 0.03), transparent 50%),
+		linear-gradient(180deg, #000000 0%, var(--hc-bg-mid) 48%, #000000 100%);
 	background-size:
 		22px 22px,
 		100% 100%,
@@ -56,34 +56,29 @@
 	/* `stable` reserviert rechts dauerhaft Platz → wirkt wie „zweiter Rahmen“ */
 	scrollbar-gutter: auto;
 	position: relative;
-	background-color: rgba(0, 0, 0, 0.62);
+	background-color: rgba(0, 0, 0, 0.68);
 	background-image:
-		radial-gradient(circle at 1px 1px, rgba(148, 163, 184, 0.04) 1px, transparent 0),
+		radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.035) 1px, transparent 0),
 		repeating-linear-gradient(
 			-22deg,
 			transparent 0,
 			transparent 11px,
-			rgba(255, 255, 255, 0.012) 11px,
-			rgba(255, 255, 255, 0.012) 12px
+			rgba(255, 255, 255, 0.01) 11px,
+			rgba(255, 255, 255, 0.01) 12px
 		),
-		radial-gradient(ellipse 95% 70% at 50% 0%, rgba(14, 165, 233, 0.05), transparent 58%),
-		radial-gradient(ellipse 80% 55% at 100% 100%, rgba(99, 102, 241, 0.04), transparent 52%),
 		linear-gradient(
 			172deg,
-			rgba(0, 0, 0, 0.78) 0%,
-			rgba(2, 6, 23, 0.92) 40%,
-			rgba(15, 23, 42, 0.82) 64%,
-			rgba(0, 0, 0, 0.88) 100%
+			rgba(0, 0, 0, 0.82) 0%,
+			rgba(14, 14, 16, 0.9) 42%,
+			rgba(0, 0, 0, 0.9) 100%
 		);
 	background-size:
 		20px 20px,
 		100% 100%,
-		100% 100%,
-		100% 100%,
 		100% 100%;
-	backdrop-filter: blur(32px) saturate(150%);
-	-webkit-backdrop-filter: blur(32px) saturate(150%);
-	border: 1px solid rgba(51, 65, 85, 0.55);
+	backdrop-filter: blur(32px) saturate(118%);
+	-webkit-backdrop-filter: blur(32px) saturate(118%);
+	border: 1px solid rgba(48, 48, 52, 0.65);
 	border-radius: clamp(0.875rem, 2vw, 1.125rem);
 	padding: clamp(1rem, 2.8vw, 1.4rem) clamp(0.95rem, 3.2vw, 1.35rem);
 	box-shadow:
