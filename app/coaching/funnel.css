@@ -1066,13 +1066,26 @@
 }
 .hc-warn {
 	margin-top: 0.5rem;
-	padding: 0.6rem 0.8rem;
-	background: rgba(56, 189, 248, 0.08);
-	border: 1px solid rgba(56, 189, 248, 0.22);
-	border-radius: 8px;
+	padding: 0.75rem 0.95rem;
+	background: rgba(56, 189, 248, 0.1);
+	border: 1px solid rgba(56, 189, 248, 0.28);
+	border-radius: 10px;
+	color: #e0f2fe;
+	font-size: clamp(0.875rem, 2.2vw, 0.9375rem);
+	line-height: 1.55;
+}
+.hc-warn__title {
+	display: block;
+	margin: 0 0 0.35rem;
+	font-size: clamp(0.8125rem, 2vw, 0.875rem);
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	color: #f0f9ff;
+}
+.hc-warn__body {
+	margin: 0;
+	font-weight: 500;
 	color: #bae6fd;
-	font-size: 0.78rem;
-	line-height: 1.45;
 }
 .hc-warn a {
 	color: var(--hc-accent-bright);

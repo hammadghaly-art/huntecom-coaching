@@ -222,11 +222,8 @@ export function CoachingFunnel({
 		};
 	}, []);
 
-	// Surface a friendly disqualification — we never hard-block, we just
-	// route low-end into a different funnel (tools/free content) instead
-	// of taking up a 1:1 slot. They can still book if they insist.
-	const disqualified =
-		data.revenueGoal === "lt5k" || data.capital === "lt5k";
+	// Hinweis nur bei sehr niedrigem **Invest** (< 5 k€) — nicht bei niedrigem Umsatzziel allein
+	const showLowCapitalHint = data.capital === "lt5k";
 
 	const TOTAL_STEPS = 5;
 
@@ -620,20 +617,22 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 							onChange={(e) => update("goal", e.target.value)}
 							placeholder="z. B. Erstes Produkt live in 90 Tagen, klare PPC-Struktur, Unterstützung bei Lieferantenwahl …"
 						/>
-						{disqualified ? (
-							<div className="hc-warn">
-								Bei sehr niedrigem Ziel- und Budgetrahmen ist klassisches 1:1
-								Coaching oft nicht der effizienteste Einstieg — unsere Tools
-								auf{" "}
-								<a
-									href="https://ai.huntecom.com"
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									ai.huntecom.com
-								</a>{" "}
-								können der passendere erste Schritt sein. Du kannst dennoch
-								terminieren; wir gehen transparent mit Erwartungen um.
+						{showLowCapitalHint ? (
+							<div className="hc-warn" role="note">
+								<strong className="hc-warn__title">
+									Hinweis: Budget unter 5.000 €
+								</strong>
+								<p className="hc-warn__body">
+									1:1-Coaching ist dann oft weniger effizient —{" "}
+									<a
+										href="https://ai.huntecom.com"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										ai.huntecom.com
+									</a>{" "}
+									kann der bessere Einstieg sein. Termin trotzdem möglich.
+								</p>
 							</div>
 						) : null}
 					</section>
