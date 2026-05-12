@@ -7,16 +7,12 @@ import "react-phone-number-input/style.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
-	BarChart3,
-	BookMarked,
-	Crown,
-	Landmark,
-	Minus,
-	PiggyBank,
-	Rocket,
-	Store,
-	TrendingDown,
-	TrendingUp,
+	ChevronLeft,
+	ChevronRight,
+	LineChart,
+	Mail,
+	MessageSquare,
+	UserRound,
 	Wallet,
 } from "lucide-react";
 import "./funnel.css";
@@ -50,8 +46,6 @@ type FormState = {
 	lastName: string;
 	email: string;
 	phone: string;
-	/** Optional — beliebiger Link (Website, Profil, …) */
-	link: string;
 	revenueGoal: RevenueGoal | "";
 	capital: Capital | "";
 	experience: Experience | "";
@@ -65,7 +59,6 @@ const INITIAL: FormState = {
 	lastName: "",
 	email: "",
 	phone: "",
-	link: "",
 	revenueGoal: "",
 	capital: "",
 	experience: "",
@@ -77,41 +70,81 @@ type ChoiceOption<T extends string> = {
 	value: T;
 	label: string;
 	hint?: string;
-	Icon: LucideIcon;
 };
 
 const REVENUE_OPTIONS: ChoiceOption<RevenueGoal>[] = [
-	{ value: "lt5k", label: "Unter 5.000 € / Monat", Icon: TrendingDown },
-	{ value: "5k_20k", label: "5.000 – 20.000 € / Monat", Icon: Minus },
-	{ value: "20k_50k", label: "20.000 – 50.000 € / Monat", Icon: TrendingUp },
-	{ value: "50k_plus", label: "50.000+ € / Monat", hint: "Skalieren-Fokus", Icon: Rocket },
+	{ value: "lt5k", label: "Unter 5.000 € / Monat" },
+	{ value: "5k_20k", label: "5.000 – 20.000 € / Monat" },
+	{ value: "20k_50k", label: "20.000 – 50.000 € / Monat" },
+	{ value: "50k_plus", label: "50.000+ € / Monat", hint: "Skalieren-Fokus" },
 ];
 
 const CAPITAL_OPTIONS: ChoiceOption<Capital>[] = [
-	{ value: "lt5k", label: "Unter 5.000 €", Icon: PiggyBank },
-	{ value: "5k_15k", label: "5.000 – 15.000 €", Icon: Wallet },
-	{ value: "15k_50k", label: "15.000 – 50.000 €", Icon: Landmark },
-	{ value: "50k_plus", label: "50.000+ €", hint: "Premium-Bereich", Icon: Crown },
+	{ value: "lt5k", label: "Unter 5.000 €" },
+	{ value: "5k_15k", label: "5.000 – 15.000 €" },
+	{ value: "15k_50k", label: "15.000 – 50.000 €" },
+	{ value: "50k_plus", label: "50.000+ €", hint: "Premium-Bereich" },
 ];
+
+function CoachingStepHead({
+	id,
+	title,
+	lead,
+	Icon,
+	onBack,
+	disabled,
+}: {
+	id: string;
+	title: string;
+	lead: string;
+	Icon?: LucideIcon;
+	onBack: () => void;
+	disabled?: boolean;
+}) {
+	return (
+		<div className="hc-step__headrow">
+			<button
+				type="button"
+				className="hc-step__back"
+				onClick={onBack}
+				disabled={disabled}
+				aria-label="Zurück"
+				title="Zurück"
+			>
+				<ChevronLeft className="hc-step__back-icon" strokeWidth={2.25} aria-hidden />
+			</button>
+			<div className="hc-step__head-cluster">
+				<div className="hc-step__title-icon-row">
+					<h1 className="hc-step__title hc-step__title--caps" id={id}>
+						{title}
+					</h1>
+					{Icon ? (
+						<span className="hc-step__title-inline-icon" aria-hidden="true">
+							<Icon className="hc-step__title-inline-svg" strokeWidth={1.75} />
+						</span>
+					) : null}
+				</div>
+				<p className="hc-step__lead">{lead}</p>
+			</div>
+		</div>
+	);
+}
 
 const EXPERIENCE_OPTIONS: ChoiceOption<Experience>[] = [
 	{
 		value: "beginner",
-		label: "Kompletter Anfänger",
-		hint: "Noch nichts verkauft",
-		Icon: BookMarked,
+		label: "Einsteiger",
+		hint: "Noch kein Amazon-Umsatz",
 	},
 	{
 		value: "selling",
-		label: "Habe schon verkauft",
-		hint: "Läuft aber nicht rund",
-		Icon: Store,
+		label: "Aktiver Verkäufer",
+		hint: "Umsatz da, Optimierung nötig",
 	},
 	{
 		value: "scaling",
-		label: "Mache Umsatz, will skalieren",
-		hint: "Fokus: Skalierung, Team & Prozesse",
-		Icon: BarChart3,
+		label: "Skalierung",
+		hint: "Wachstum, Team, Prozesse",
 	},
 ];
 
@@ -196,6 +229,12 @@ export function CoachingFunnel({
 		data.revenueGoal === "lt5k" || data.capital === "lt5k";
 
 	const TOTAL_STEPS = 5;
+
+	const STEP_LABELS = useMemo(
+		() => ["Ausgangslage", "Umsatz", "Budget", "Motivation", "Kontakt"],
+		[],
+	);
+
 	const progress = useMemo(() => {
 		if (step < TOTAL_STEPS) {
 			return Math.round(((step + 1) / 5) * 70);
@@ -209,16 +248,8 @@ export function CoachingFunnel({
 
 	function next() {
 		setError(null);
-		if (step === 0 && !data.experience) {
-			setError("Bitte wähle eine Option, um fortzufahren.");
-			return;
-		}
-		if (step === 1 && !data.revenueGoal) {
-			setError("Bitte wähle ein Umsatzniveau.");
-			return;
-		}
-		if (step === 2 && !data.capital) {
-			setError("Bitte gib dein verfügbares Budget an.");
+		if (step === 3) {
+			setStep(4);
 			return;
 		}
 		if (step === 4) {
@@ -245,7 +276,6 @@ export function CoachingFunnel({
 			setStep(TOTAL_STEPS);
 			return;
 		}
-		setStep((s) => Math.min(s + 1, TOTAL_STEPS));
 	}
 
 	function back() {
@@ -320,7 +350,6 @@ export function CoachingFunnel({
 						capital: data.capital || undefined,
 						experience: data.experience || undefined,
 						goal: data.goal.trim() || undefined,
-						link: data.link.trim() || undefined,
 					},
 					emailMarketingOptIn: data.contactConsent,
 					utm: {
@@ -425,25 +454,6 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 				className="hc-funnel__shell"
 				aria-busy={step === TOTAL_STEPS}
 			>
-				<div
-					className={`hc-funnel__progress${step === TOTAL_STEPS ? " hc-funnel__progress--active" : ""}`}
-				>
-					<div
-						className="hc-funnel__progress-bar"
-						style={{ width: `${progress}%` }}
-						aria-valuenow={progress}
-						aria-valuemin={0}
-						aria-valuemax={100}
-						aria-label={`Formularfortschritt ${progress} Prozent`}
-						role="progressbar"
-					/>
-				</div>
-				{step < TOTAL_STEPS ? (
-					<p className="hc-funnel__step-meta" aria-live="polite">
-						Schritt {step + 1} von 5
-					</p>
-				) : null}
-
 				<div className="hc-funnel__brand">
 					<div className="hc-funnel__brand-logo-wrap">
 						{brandLogoOk ? (
@@ -452,7 +462,7 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 								src="/brand/huntecom-favicon.png"
 								width={48}
 								height={48}
-								alt=""
+								alt="Huntecom"
 								decoding="async"
 								className="hc-funnel__brand-logo"
 								onError={() => setBrandLogoOk(false)}
@@ -464,140 +474,151 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 						)}
 					</div>
 					<div className="hc-funnel__brand-text">
-						<div className="hc-funnel__brand-name">Huntecom</div>
-						<div className="hc-funnel__brand-tag">1:1 Amazon FBA Coaching</div>
+						<div className="hc-funnel__brand-row">
+							<span className="hc-funnel__brand-name">Huntecom</span>
+							<span className="hc-funnel__brand-sep" aria-hidden="true">
+								·
+							</span>
+							<span className="hc-funnel__brand-tag">1:1 Amazon FBA Coaching</span>
+						</div>
 					</div>
 				</div>
 
-				{/* STEP 0 — Einstieg + Erfahrung */}
+				{/* STEP 0 — Einstieg + Erfahrung (Titel unten: Brand trägt „Coaching“ oben) */}
 				{step === 0 ? (
-					<section className="hc-step">
-						<h1 className="hc-step__title">
-							Persönliches 1:1-Coaching anfragen
-						</h1>
-						<p className="hc-step__lead">
-							Kurze, gezielte Fragen zu deiner Ausgangslage. Kontaktdaten und
-							Terminwahl folgen zum Schluss. Unsere 1:1-Kapazität ist bewusst{" "}
-							<strong>begrenzt</strong>.
-						</p>
-						<h2 className="hc-step__subtitle">Wo stehst du heute?</h2>
-						<p className="hc-step__lead hc-step__lead--tight">
-							So ordnen wir dein Profil sinnvoll ein.
-						</p>
-						<div className="hc-options">
-							{EXPERIENCE_OPTIONS.map((opt) => {
-								const Icon = opt.Icon;
-								return (
-									<button
-										key={opt.value}
-										type="button"
-										className={`hc-option ${data.experience === opt.value ? "is-active" : ""}`}
-										onClick={() => update("experience", opt.value)}
-									>
-										<span className="hc-option__icon-wrap">
-											<Icon className="hc-option__icon" strokeWidth={2} aria-hidden />
-										</span>
-										<span className="hc-option__text">
-											<span className="hc-option__label">{opt.label}</span>
-											<span className="hc-option__hint">
-												{opt.hint ?? "\u00a0"}
-											</span>
-										</span>
-									</button>
-								);
-							})}
+					<section
+						className="hc-step hc-step--opening"
+						aria-labelledby="hc-experience-q hc-step-0-context"
+					>
+						<div className="hc-question-block">
+							<div className="hc-question-block__icon" aria-hidden="true">
+								<UserRound className="hc-question-block__svg" strokeWidth={1.65} />
+							</div>
+							<h1 className="hc-step__subtitle" id="hc-experience-q">
+								Wo stehst du heute?
+							</h1>
 						</div>
+						<div className="hc-options" role="group" aria-labelledby="hc-experience-q">
+							{EXPERIENCE_OPTIONS.map((opt) => (
+								<button
+									key={opt.value}
+									type="button"
+									className={`hc-option hc-option--text-only ${data.experience === opt.value ? "is-active" : ""}`}
+									aria-pressed={data.experience === opt.value}
+									onClick={() => {
+										setError(null);
+										update("experience", opt.value);
+										setStep(1);
+									}}
+								>
+									<span className="hc-option__text">
+										<span className="hc-option__label">{opt.label}</span>
+										<span className="hc-option__hint">
+											{opt.hint ?? "\u00a0"}
+										</span>
+									</span>
+								</button>
+							))}
+						</div>
+						<p className="hc-step__contextline" id="hc-step-0-context">
+							1:1-Coaching anfragen
+						</p>
 					</section>
 				) : null}
 
 				{/* STEP 1 — Umsatzziel */}
 				{step === 1 ? (
-					<section className="hc-step">
-						<h1 className="hc-step__title">
-							Welches monatliche Umsatzniveau strebst du an?
-						</h1>
-						<p className="hc-step__lead">
-							Bezogen auf die nächsten zwölf Monate — bitte realistisch
-							einschätzen.
-						</p>
-						<div className="hc-options">
-							{REVENUE_OPTIONS.map((opt) => {
-								const Icon = opt.Icon;
-								return (
-									<button
-										key={opt.value}
-										type="button"
-										className={`hc-option ${data.revenueGoal === opt.value ? "is-active" : ""}`}
-										onClick={() => update("revenueGoal", opt.value)}
-									>
-										<span className="hc-option__icon-wrap">
-											<Icon className="hc-option__icon" strokeWidth={2} aria-hidden />
+					<section className="hc-step" aria-labelledby="hc-step-1-title">
+						<CoachingStepHead
+							id="hc-step-1-title"
+							title="Geplanter Monatsumsatz"
+							lead="Zeithorizont: 12 Monate · bitte realistisch einschätzen"
+							Icon={LineChart}
+							onBack={back}
+							disabled={submitting}
+						/>
+						<div className="hc-options" role="group" aria-labelledby="hc-step-1-title">
+							{REVENUE_OPTIONS.map((opt) => (
+								<button
+									key={opt.value}
+									type="button"
+									className={`hc-option hc-option--text-only ${data.revenueGoal === opt.value ? "is-active" : ""}`}
+									aria-pressed={data.revenueGoal === opt.value}
+									onClick={() => {
+										setError(null);
+										update("revenueGoal", opt.value);
+										setStep(2);
+									}}
+								>
+									<span className="hc-option__text">
+										<span className="hc-option__label">{opt.label}</span>
+										<span className="hc-option__hint">
+											{opt.hint ?? "\u00a0"}
 										</span>
-										<span className="hc-option__text">
-											<span className="hc-option__label">{opt.label}</span>
-											<span className="hc-option__hint">
-												{opt.hint ?? "\u00a0"}
-											</span>
-										</span>
-									</button>
-								);
-							})}
+									</span>
+								</button>
+							))}
 						</div>
 					</section>
 				) : null}
 
 				{/* STEP 2 — Kapital */}
 				{step === 2 ? (
-					<section className="hc-step">
-						<h1 className="hc-step__title">
-							Welches Budget kannst du derzeit einplanen?
-						</h1>
-						<p className="hc-step__lead">
-							Ehrliche Angaben ermöglichen eine sinnvolle Einschätzung. Wir
-							empfehlen kein Coaching, das sich wirtschaftlich nicht trägt.
-						</p>
-						<div className="hc-options">
-							{CAPITAL_OPTIONS.map((opt) => {
-								const Icon = opt.Icon;
-								return (
-									<button
-										key={opt.value}
-										type="button"
-										className={`hc-option ${data.capital === opt.value ? "is-active" : ""}`}
-										onClick={() => update("capital", opt.value)}
-									>
-										<span className="hc-option__icon-wrap">
-											<Icon className="hc-option__icon" strokeWidth={2} aria-hidden />
+					<section className="hc-step" aria-labelledby="hc-step-2-title">
+						<CoachingStepHead
+							id="hc-step-2-title"
+							title="Investitionsrahmen"
+							lead="Startkapital inkl. Lager, Marketing & Tools (grobe Orientierung)"
+							Icon={Wallet}
+							onBack={back}
+							disabled={submitting}
+						/>
+						<div className="hc-options" role="group" aria-labelledby="hc-step-2-title">
+							{CAPITAL_OPTIONS.map((opt) => (
+								<button
+									key={opt.value}
+									type="button"
+									className={`hc-option hc-option--text-only ${data.capital === opt.value ? "is-active" : ""}`}
+									aria-pressed={data.capital === opt.value}
+									onClick={() => {
+										setError(null);
+										update("capital", opt.value);
+										setStep(3);
+									}}
+								>
+									<span className="hc-option__text">
+										<span className="hc-option__label">{opt.label}</span>
+										<span className="hc-option__hint">
+											{opt.hint ?? "\u00a0"}
 										</span>
-										<span className="hc-option__text">
-											<span className="hc-option__label">{opt.label}</span>
-											<span className="hc-option__hint">
-												{opt.hint ?? "\u00a0"}
-											</span>
-										</span>
-									</button>
-								);
-							})}
+									</span>
+								</button>
+							))}
 						</div>
 					</section>
 				) : null}
 
 				{/* STEP 3 — Motivation / Freitext */}
 				{step === 3 ? (
-					<section className="hc-step">
-						<h1 className="hc-step__title">
-							Warum startest du gerade jetzt?
-						</h1>
-						<p className="hc-step__lead">
-							Zwei bis drei Sätze reichen — so bereiten wir das Erstgespräch
-							fokussiert vor.
-						</p>
+					<section className="hc-step" aria-labelledby="hc-step-3-title">
+						<CoachingStepHead
+							id="hc-step-3-title"
+							title="Dein Fokus"
+							lead="Optional · 1–2 Sätze zu Priorität und Rahmen"
+							Icon={MessageSquare}
+							onBack={back}
+							disabled={submitting}
+						/>
+						<label className="hc-textarea-label" htmlFor="hc-coaching-goal">
+							Kurzbeschreibung <span className="hc-textarea-label__optional">(optional)</span>
+						</label>
 						<textarea
+							id="hc-coaching-goal"
 							className="hc-textarea"
 							rows={4}
 							value={data.goal}
 							onChange={(e) => update("goal", e.target.value)}
-							placeholder="z. B. Ich möchte innerhalb von 12 Monaten den Schritt in Vollzeit wagen, habe ein Produkt in Aussicht und möchte PPC sauber aufsetzen …"
+							placeholder="z. B. Erstes Produkt live in 90 Tagen, klare PPC-Struktur, Unterstützung bei Lieferantenwahl …"
 						/>
 						{disqualified ? (
 							<div className="hc-warn">
@@ -620,50 +641,57 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 
 				{/* STEP 4 — Kontaktdaten, dann automatisch CRM + Calendly */}
 				{step === 4 ? (
-					<section className="hc-step">
-						<h1 className="hc-step__title">
-							Wie erreichen wir dich zuverlässig?
-						</h1>
-						<p className="hc-step__lead">
-							Zum Abschluss: Mit einem Klick sendest du die Anfrage. Anschließend
-							öffnet sich der Kalender für dein Erstgespräch.
-						</p>
-						<div className="hc-grid">
-							<label className="hc-field">
-								<span>Vorname *</span>
+					<section className="hc-step" aria-labelledby="hc-step-4-title">
+						<CoachingStepHead
+							id="hc-step-4-title"
+							title="Kontakt für Rückmeldung"
+							lead="Anschließend Kalender · keine Werbemails"
+							Icon={Mail}
+							onBack={back}
+							disabled={submitting}
+						/>
+						<fieldset className="hc-fieldset">
+							<legend className="hc-fieldset-legend">Deine Daten</legend>
+							<div className="hc-grid">
+							<label className="hc-field" htmlFor="hc-coaching-firstname">
+								<span>Vorname (Pflichtfeld)</span>
 								<input
+									id="hc-coaching-firstname"
 									type="text"
 									autoComplete="given-name"
 									value={data.firstName}
 									onChange={(e) => update("firstName", e.target.value)}
-									placeholder="Max"
+									placeholder="Vorname"
 								/>
 							</label>
-							<label className="hc-field">
-								<span>Nachname</span>
+							<label className="hc-field" htmlFor="hc-coaching-lastname">
+								<span>Nachname (optional)</span>
 								<input
+									id="hc-coaching-lastname"
 									type="text"
 									autoComplete="family-name"
 									value={data.lastName}
 									onChange={(e) => update("lastName", e.target.value)}
-									placeholder="Muster"
+									placeholder="Nachname"
 								/>
 							</label>
-							<label className="hc-field hc-field--full">
-								<span>E-Mail *</span>
+							<label className="hc-field hc-field--full" htmlFor="hc-coaching-email">
+								<span>E-Mail (Pflichtfeld)</span>
 								<input
+									id="hc-coaching-email"
 									type="email"
 									autoComplete="email"
+									inputMode="email"
 									value={data.email}
 									onChange={(e) => update("email", e.target.value)}
-									placeholder="name@firma.de"
+									placeholder="du@beispiel.de"
 								/>
 							</label>
 							<div className="hc-field hc-field--full hc-phone">
-								<span>Telefon für Rückfragen</span>
-								<span className="hc-field-hint">
-									Optional — Land über die Flagge wählen, Nummer
-									international gültig.
+								<span id="hc-phone-label">Telefon (optional)</span>
+								<span className="hc-field-hint" id="hc-phone-hint">
+									Für Rückfragen — Land über die Flagge wählen, gültige
+									internationale Nummer.
 								</span>
 								<PhoneInput
 									international
@@ -674,25 +702,13 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 									placeholder="z. B. 170 1234567"
 									className="hc-phone-input"
 									autoComplete="tel"
-									aria-label="Telefonnummer"
+									aria-labelledby="hc-phone-label"
+									aria-describedby="hc-phone-hint"
 								/>
 							</div>
-							<label className="hc-field hc-field--full">
-								<span>Link (optional)</span>
-								<span className="hc-field-hint">
-									z. B. Website oder Social-Profil — freiwillig.
-								</span>
+							<label className="hc-consent hc-field--full" htmlFor="hc-coaching-consent">
 								<input
-									type="text"
-									autoComplete="url"
-									inputMode="url"
-									value={data.link}
-									onChange={(e) => update("link", e.target.value)}
-									placeholder="https://…"
-								/>
-							</label>
-							<label className="hc-consent hc-field--full">
-								<input
+									id="hc-coaching-consent"
 									type="checkbox"
 									checked={data.contactConsent}
 									onChange={(e) =>
@@ -717,7 +733,8 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 									</span>
 								</span>
 							</label>
-						</div>
+							</div>
+						</fieldset>
 					</section>
 				) : null}
 
@@ -758,31 +775,64 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 					</section>
 				) : null}
 
-				{error ? <div className="hc-error">{error}</div> : null}
+				{error ? (
+					<div className="hc-error" role="alert">
+						{error}
+					</div>
+				) : null}
 
 				{step < TOTAL_STEPS ? (
-					<div className="hc-actions">
-						{step > 0 ? (
-							<button
-								type="button"
-								className="hc-btn hc-btn--ghost"
-								onClick={back}
-								disabled={submitting}
-							>
-								← Zurück
-							</button>
-						) : null}
-						<button
-							type="button"
-							className="hc-btn hc-btn--primary"
-							onClick={next}
-							disabled={submitting}
+					<footer className="hc-funnel__dock">
+						<div
+							className={`hc-funnel__progress${step === TOTAL_STEPS ? " hc-funnel__progress--active" : ""}`}
 						>
-							{step === 4
-								? "Anfrage senden und Kalender öffnen →"
-								: "Weiter →"}
-						</button>
-					</div>
+							<div
+								className="hc-funnel__progress-bar"
+								style={{ width: `${progress}%` }}
+								aria-valuenow={progress}
+								aria-valuemin={0}
+								aria-valuemax={100}
+								aria-label={`Formularfortschritt ${progress} Prozent`}
+								role="progressbar"
+							/>
+						</div>
+						<div className="hc-funnel__step-head">
+							<p className="hc-funnel__step-meta" aria-live="polite">
+								Schritt {step + 1} von {TOTAL_STEPS}
+							</p>
+							<ol className="hc-step-dots" aria-label="Fortschritt im Formular">
+								{STEP_LABELS.map((label, i) => {
+									const state =
+										i < step ? "done" : i === step ? "current" : "upcoming";
+									return (
+										<li key={label} className={`hc-step-dots__item hc-step-dots__item--${state}`}>
+											<span className="hc-step-dots__dot" title={label} />
+											<span className="hc-step-dots__sr">{label}</span>
+										</li>
+									);
+								})}
+							</ol>
+						</div>
+						{step >= 3 ? (
+							<div className="hc-actions hc-actions--primary-only">
+								<button
+									type="button"
+									className="hc-btn hc-btn--primary"
+									onClick={next}
+									disabled={submitting}
+								>
+									{step === 4 ? (
+										"Anfrage senden & Termin wählen"
+									) : (
+										<>
+											Zum Kontakt
+											<ChevronRight className="hc-btn__icon" strokeWidth={2.25} aria-hidden />
+										</>
+									)}
+								</button>
+							</div>
+						) : null}
+					</footer>
 				) : null}
 
 				<p className="hc-legal-foot">

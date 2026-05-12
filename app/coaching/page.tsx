@@ -3,7 +3,7 @@ import { CoachingFunnel } from "./funnel";
 
 const SEO_TITLE = "Bewirb dich um dein 1:1 Coaching | Huntecom";
 const SEO_DESCRIPTION =
-	"Persönliches Amazon-FBA-Coaching: zuerst ein paar Fragen zu deiner Situation, dann deine Kontaktdaten — im Anschluss buchst du dein Erstgespräch im Kalender.";
+	"Amazon-FBA-Coaching: zuerst ein paar Fragen zu deiner Situation, dann deine Kontaktdaten — im Anschluss buchst du dein Erstgespräch im Kalender.";
 
 export const metadata: Metadata = {
 	title: SEO_TITLE,
