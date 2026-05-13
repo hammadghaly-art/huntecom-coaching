@@ -1,19 +1,16 @@
 import type { MetadataRoute } from "next";
+import { getSiteUrl } from "@/lib/site-url";
 
-const base = (
-	process.env.NEXT_PUBLIC_APP_URL || "https://www.huntecom.com"
-).replace(/\/$/, "");
+export const dynamic = "force-dynamic";
 
 export default function robots(): MetadataRoute.Robots {
+	const base = getSiteUrl();
+
 	return {
 		rules: [
-			{
-				userAgent: "*",
-				allow: "/",
-				disallow: ["/api/", "/_next/", "/admin/"],
-			},
+			{ userAgent: "*", allow: "/", disallow: [] },
+			{ userAgent: "Googlebot", allow: "/", disallow: [] },
 		],
 		sitemap: `${base}/sitemap.xml`,
-		host: base,
 	};
 }

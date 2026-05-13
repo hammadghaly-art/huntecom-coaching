@@ -1,4 +1,5 @@
 import HomeClient from "./home-client";
+import { HomeSeoSection } from "./home-seo-section";
 
 const CALENDLY_URL =
 	process.env.NEXT_PUBLIC_CALENDLY_URL ??
@@ -11,10 +12,13 @@ const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID ?? "";
 
 export default function Home() {
 	return (
-		<HomeClient
-			calendlyUrl={CALENDLY_URL}
-			leadApiUrl={LEAD_API}
-			metaPixelId={META_PIXEL_ID}
-		/>
+		<>
+			<HomeClient
+				calendlyUrl={CALENDLY_URL}
+				leadApiUrl={LEAD_API}
+				metaPixelId={META_PIXEL_ID}
+			/>
+			<HomeSeoSection />
+		</>
 	);
 }

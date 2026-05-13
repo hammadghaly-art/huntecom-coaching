@@ -1,0 +1,92 @@
+/**
+ * Hero / Tablet: Webflow `.content-wrapper` ist Grid (1.5fr 1fr); bei max-width:991px
+ * setzt Webflow nur `flex-direction: column` — wirkungslos auf Grid → zwei schmale Spalten.
+ *
+ * Zusätzlich: `.div-block-17` (Wrapper der Mobile-CTA) ist default `display: none` und wird
+ * nur bis max-width:767px eingeblendet. Zwischen 768px und Desktop ist der Button-Container
+ * unsichtbar → kein CTA trotz sichtbarem Link-Styling.
+ *
+ * Video: Inline-Styles (min-height + object-fit:cover) → in schmalen Spalten komisches Format;
+ * fester 16:9-Rahmen + contain.
+ */
+
+@media screen and (max-width: 1279px) {
+	.hero-section .content-wrapper {
+		display: flex !important;
+		flex-direction: column !important;
+		align-items: stretch !important;
+		grid-template-columns: none !important;
+		grid-template-rows: auto !important;
+		gap: clamp(1rem, 3vw, 1.5rem);
+		width: 100%;
+		max-width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.hero-section .left-content-wrapper,
+	.hero-section .right-content-wrapper {
+		width: 100% !important;
+		max-width: 100%;
+		min-width: 0;
+	}
+
+	/* Mobile-CTA-Container: Webflow blendet ihn nur ≤767px ein */
+	.hero-section .div-block-17 {
+		display: flex !important;
+		flex-direction: column;
+		align-items: stretch;
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 100%;
+		margin-bottom: 1rem;
+	}
+
+	.hero-section .right-content-wrapper .button-primary:not(.mobile) {
+		display: none !important;
+	}
+
+	.hero-section .button-primary.mobile {
+		display: flex !important;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		max-width: 100%;
+		box-sizing: border-box;
+	}
+
+	/* 16:9-Box statt vw/min-height + Cover */
+	.hero-section .code-embed-4 {
+		display: block !important;
+		box-sizing: border-box;
+		width: 100% !important;
+		max-width: 100%;
+		aspect-ratio: 16 / 9;
+		min-height: 0 !important;
+		height: auto !important;
+		overflow: hidden;
+		background-color: #020617;
+		contain: layout style;
+	}
+
+	.hero-section .code-embed-4 video {
+		display: block !important;
+		box-sizing: border-box;
+		width: 100%;
+		height: 100%;
+		min-height: 0 !important;
+		max-height: none !important;
+		object-fit: contain !important;
+		background-color: #020617 !important;
+	}
+
+	.hero-section {
+		overflow-x: hidden;
+		overflow-y: visible;
+	}
+
+	/* Leicht mehr Luft unter fixierter Navbar (Überschrift oben angeschnitten) */
+	.hero-section .padding-medium {
+		padding-top: clamp(1rem, 4vw, 2.5rem);
+	}
+}
