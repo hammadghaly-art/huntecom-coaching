@@ -7,11 +7,19 @@ import "react-phone-number-input/style.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
+	Banknote,
+	Briefcase,
 	ChevronLeft,
 	ChevronRight,
+	Coins,
+	Gem,
 	LineChart,
 	Mail,
 	MessageSquare,
+	PiggyBank,
+	Rocket,
+	Store,
+	TrendingUp,
 	UserRound,
 	Wallet,
 } from "lucide-react";
@@ -69,38 +77,39 @@ const INITIAL: FormState = {
 type ChoiceOption<T extends string> = {
 	value: T;
 	label: string;
-	hint?: string;
+	Icon: LucideIcon;
 };
 
 const REVENUE_OPTIONS: ChoiceOption<RevenueGoal>[] = [
-	{ value: "lt5k", label: "Unter 5.000 € / Monat" },
-	{ value: "5k_20k", label: "5.000 – 20.000 € / Monat" },
-	{ value: "20k_50k", label: "20.000 – 50.000 € / Monat" },
-	{ value: "50k_plus", label: "50.000+ € / Monat", hint: "Skalieren-Fokus" },
+	{ value: "lt5k", label: "Unter 5.000 € / Monat", Icon: Coins },
+	{ value: "5k_20k", label: "5.000 – 20.000 € / Monat", Icon: Banknote },
+	{ value: "20k_50k", label: "20.000 – 50.000 € / Monat", Icon: Wallet },
+	{ value: "50k_plus", label: "50.000+ € / Monat", Icon: TrendingUp },
 ];
 
 const CAPITAL_OPTIONS: ChoiceOption<Capital>[] = [
-	{ value: "lt5k", label: "Unter 5.000 €" },
-	{ value: "5k_15k", label: "5.000 – 15.000 €" },
-	{ value: "15k_50k", label: "15.000 – 50.000 €" },
-	{ value: "50k_plus", label: "50.000+ €", hint: "Premium-Bereich" },
+	{ value: "lt5k", label: "Unter 5.000 €", Icon: PiggyBank },
+	{ value: "5k_15k", label: "5.000 – 15.000 €", Icon: Wallet },
+	{ value: "15k_50k", label: "15.000 – 50.000 €", Icon: Briefcase },
+	{ value: "50k_plus", label: "50.000+ €", Icon: Gem },
 ];
 
 function CoachingStepHead({
 	id,
 	title,
-	lead,
+	lead = "",
 	Icon,
 	onBack,
 	disabled,
 }: {
 	id: string;
 	title: string;
-	lead: string;
+	lead?: string;
 	Icon?: LucideIcon;
 	onBack: () => void;
 	disabled?: boolean;
 }) {
+	const showLead = lead.trim().length > 0;
 	return (
 		<div className="hc-step__headrow">
 			<button
@@ -115,37 +124,25 @@ function CoachingStepHead({
 			</button>
 			<div className="hc-step__head-cluster">
 				<div className="hc-step__title-icon-row">
-					<h1 className="hc-step__title hc-step__title--caps" id={id}>
-						{title}
-					</h1>
 					{Icon ? (
 						<span className="hc-step__title-inline-icon" aria-hidden="true">
 							<Icon className="hc-step__title-inline-svg" strokeWidth={1.75} />
 						</span>
 					) : null}
+					<h1 className="hc-step__title hc-step__title--caps" id={id}>
+						{title}
+					</h1>
 				</div>
-				<p className="hc-step__lead">{lead}</p>
+				{showLead ? <p className="hc-step__lead">{lead}</p> : null}
 			</div>
 		</div>
 	);
 }
 
 const EXPERIENCE_OPTIONS: ChoiceOption<Experience>[] = [
-	{
-		value: "beginner",
-		label: "Einsteiger",
-		hint: "Noch kein Amazon-Umsatz",
-	},
-	{
-		value: "selling",
-		label: "Aktiver Verkäufer",
-		hint: "Umsatz da, Optimierung nötig",
-	},
-	{
-		value: "scaling",
-		label: "Skalierung",
-		hint: "Wachstum, Team, Prozesse",
-	},
+	{ value: "beginner", label: "Einsteiger", Icon: UserRound },
+	{ value: "selling", label: "Aktiver Verkäufer", Icon: Store },
+	{ value: "scaling", label: "Skalierung", Icon: Rocket },
 ];
 
 function readUtmFromUrl(): Record<string, string> {
@@ -228,7 +225,7 @@ export function CoachingFunnel({
 	const TOTAL_STEPS = 5;
 
 	const STEP_LABELS = useMemo(
-		() => ["Ausgangslage", "Umsatz", "Budget", "Motivation", "Kontakt"],
+		() => ["Ausgangslage", "Umsatz", "Startkapital", "Motivation", "Kontakt"],
 		[],
 	);
 
@@ -258,9 +255,13 @@ export function CoachingFunnel({
 				setError("Bitte gib eine gültige E-Mail-Adresse ein.");
 				return;
 			}
-			if (data.phone.trim() && !isPossiblePhoneNumber(data.phone)) {
+			if (!data.phone.trim()) {
+				setError("Bitte gib eine Telefonnummer an (Pflichtfeld).");
+				return;
+			}
+			if (!isPossiblePhoneNumber(data.phone)) {
 				setError(
-					"Die Telefonnummer ist unvollständig. Bitte prüfen oder das Feld freilassen.",
+					"Bitte eine gültige internationale Telefonnummer eingeben (Land über die Flagge wählen).",
 				);
 				return;
 			}
@@ -500,7 +501,7 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 								<button
 									key={opt.value}
 									type="button"
-									className={`hc-option hc-option--text-only ${data.experience === opt.value ? "is-active" : ""}`}
+									className={`hc-option hc-option--with-icon ${data.experience === opt.value ? "is-active" : ""}`}
 									aria-pressed={data.experience === opt.value}
 									onClick={() => {
 										setError(null);
@@ -508,11 +509,11 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 										setStep(1);
 									}}
 								>
+									<span className="hc-option__icon-wrap" aria-hidden="true">
+										<opt.Icon className="hc-option__icon" strokeWidth={2.1} />
+									</span>
 									<span className="hc-option__text">
 										<span className="hc-option__label">{opt.label}</span>
-										<span className="hc-option__hint">
-											{opt.hint ?? "\u00a0"}
-										</span>
 									</span>
 								</button>
 							))}
@@ -529,7 +530,6 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 						<CoachingStepHead
 							id="hc-step-1-title"
 							title="Geplanter Monatsumsatz"
-							lead="Zeithorizont: 12 Monate · bitte realistisch einschätzen"
 							Icon={LineChart}
 							onBack={back}
 							disabled={submitting}
@@ -539,7 +539,7 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 								<button
 									key={opt.value}
 									type="button"
-									className={`hc-option hc-option--text-only ${data.revenueGoal === opt.value ? "is-active" : ""}`}
+									className={`hc-option hc-option--with-icon ${data.revenueGoal === opt.value ? "is-active" : ""}`}
 									aria-pressed={data.revenueGoal === opt.value}
 									onClick={() => {
 										setError(null);
@@ -547,11 +547,11 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 										setStep(2);
 									}}
 								>
+									<span className="hc-option__icon-wrap" aria-hidden="true">
+										<opt.Icon className="hc-option__icon" strokeWidth={2.1} />
+									</span>
 									<span className="hc-option__text">
 										<span className="hc-option__label">{opt.label}</span>
-										<span className="hc-option__hint">
-											{opt.hint ?? "\u00a0"}
-										</span>
 									</span>
 								</button>
 							))}
@@ -564,8 +564,7 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 					<section className="hc-step" aria-labelledby="hc-step-2-title">
 						<CoachingStepHead
 							id="hc-step-2-title"
-							title="Investitionsrahmen"
-							lead="Startkapital inkl. Lager, Marketing & Tools (grobe Orientierung)"
+							title="Startkapital"
 							Icon={Wallet}
 							onBack={back}
 							disabled={submitting}
@@ -575,7 +574,7 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 								<button
 									key={opt.value}
 									type="button"
-									className={`hc-option hc-option--text-only ${data.capital === opt.value ? "is-active" : ""}`}
+									className={`hc-option hc-option--with-icon ${data.capital === opt.value ? "is-active" : ""}`}
 									aria-pressed={data.capital === opt.value}
 									onClick={() => {
 										setError(null);
@@ -583,11 +582,11 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 										setStep(3);
 									}}
 								>
+									<span className="hc-option__icon-wrap" aria-hidden="true">
+										<opt.Icon className="hc-option__icon" strokeWidth={2.1} />
+									</span>
 									<span className="hc-option__text">
 										<span className="hc-option__label">{opt.label}</span>
-										<span className="hc-option__hint">
-											{opt.hint ?? "\u00a0"}
-										</span>
 									</span>
 								</button>
 							))}
@@ -601,13 +600,13 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 						<CoachingStepHead
 							id="hc-step-3-title"
 							title="Dein Fokus"
-							lead="Optional · 1–2 Sätze zu Priorität und Rahmen"
 							Icon={MessageSquare}
 							onBack={back}
 							disabled={submitting}
 						/>
 						<label className="hc-textarea-label" htmlFor="hc-coaching-goal">
-							Kurzbeschreibung <span className="hc-textarea-label__optional">(optional)</span>
+							Kurzbeschreibung{" "}
+							<span className="hc-textarea-label__optional">(optional)</span>
 						</label>
 						<textarea
 							id="hc-coaching-goal"
@@ -644,7 +643,6 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 						<CoachingStepHead
 							id="hc-step-4-title"
 							title="Kontakt für Rückmeldung"
-							lead="Anschließend Kalender · keine Werbemails"
 							Icon={Mail}
 							onBack={back}
 							disabled={submitting}
@@ -687,10 +685,9 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 								/>
 							</label>
 							<div className="hc-field hc-field--full hc-phone">
-								<span id="hc-phone-label">Telefon (optional)</span>
+								<span id="hc-phone-label">Telefon (Pflichtfeld)</span>
 								<span className="hc-field-hint" id="hc-phone-hint">
-									Für Rückfragen — Land über die Flagge wählen, gültige
-									internationale Nummer.
+									Land über die Flagge wählen, gültige internationale Nummer.
 								</span>
 								<PhoneInput
 									international
@@ -701,6 +698,7 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 									placeholder="z. B. 170 1234567"
 									className="hc-phone-input"
 									autoComplete="tel"
+									required
 									aria-labelledby="hc-phone-label"
 									aria-describedby="hc-phone-hint"
 								/>

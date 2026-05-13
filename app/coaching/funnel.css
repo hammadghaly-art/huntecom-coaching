@@ -398,12 +398,12 @@
 .hc-funnel__brand-name {
 	font-weight: 600;
 	letter-spacing: -0.02em;
-	font-size: 0.875rem;
+	font-size: clamp(0.9375rem, 2.4vw, 1.0625rem);
 	color: var(--hc-text);
 }
 .hc-funnel__brand-tag {
 	color: #94a3b8;
-	font-size: clamp(0.75rem, 2.1vw, 0.8125rem);
+	font-size: clamp(0.8125rem, 2.35vw, 0.9375rem);
 	font-weight: 600;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
@@ -473,8 +473,8 @@
 .hc-step__title-icon-row {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	gap: 0.5rem;
+	justify-content: flex-start;
+	gap: 0.55rem;
 	min-width: 0;
 }
 .hc-step__title.hc-step__title--caps {
@@ -490,6 +490,7 @@
 }
 .hc-step__title-inline-icon {
 	flex-shrink: 0;
+	order: -1;
 	width: 2.35rem;
 	height: 2.35rem;
 	display: grid;
@@ -624,7 +625,7 @@
 
 .hc-textarea-label {
 	display: block;
-	font-size: 0.75rem;
+	font-size: 0.8125rem;
 	font-weight: 500;
 	color: var(--hc-text-muted);
 	margin-bottom: 0.35rem;
@@ -884,6 +885,16 @@
 	padding-left: clamp(0.95rem, 2.6vw, 1.1rem);
 }
 
+/* Icon + eine Zeile Label (kein Untertitel) */
+.hc-option--with-icon {
+	align-items: center;
+	gap: clamp(0.65rem, 2vw, 0.85rem);
+}
+
+.hc-funnel .hc-option__hint {
+	display: none;
+}
+
 @media (hover: hover) {
 	.hc-option:hover {
 		border-color: rgba(56, 189, 248, 0.38);
@@ -956,7 +967,7 @@
 }
 .hc-option__label {
 	font-weight: 600;
-	font-size: clamp(0.84375rem, 2.2vw, 0.90625rem);
+	font-size: clamp(0.875rem, 2.35vw, 0.9375rem);
 	line-height: 1.32;
 	letter-spacing: -0.015em;
 }
@@ -1000,7 +1011,7 @@
 	padding: 0.7rem 1.25rem;
 	font: inherit;
 	font-weight: 600;
-	font-size: clamp(0.8125rem, 2.1vw, 0.875rem);
+	font-size: clamp(0.84375rem, 2.15vw, 0.90625rem);
 	cursor: pointer;
 	border: 1px solid transparent;
 	transition: filter 0.15s, box-shadow 0.15s;
