@@ -22,9 +22,13 @@ export const metadata: Metadata = {
 
 // Calendly URL is read from env so we can swap the booking provider later
 // (cal.com, savvycal, …) without redeploying the whole site.
+// Default points to the live "30min" event-type on the huntecom Calendly
+// account. The previously hard-coded `coaching-erstgespraech` slug returned
+// 404 in production and silently killed every qualified lead. If you change
+// the event-type slug in Calendly, set `NEXT_PUBLIC_CALENDLY_URL` accordingly.
 const CALENDLY_URL =
 	process.env.NEXT_PUBLIC_CALENDLY_URL ??
-	"https://calendly.com/huntecom/coaching-erstgespraech";
+	"https://calendly.com/huntecom/30min";
 
 const LEAD_API =
 	process.env.NEXT_PUBLIC_LEAD_API ?? "https://ai.huntecom.com/api/crm/lead";

@@ -34,6 +34,12 @@ let coachingLeadSubmitInFlight = false;
 // 5-step progressive form: Fragen → Motivation → Kontaktdaten → Submit → Calendly.
 // Qualifikation zuerst, persönliche Daten erst am Ende. Score-Boost wie gehabt.
 //
+// 5k-COACHING-FILTER: Wer unter 5.000 € Kapital angibt, wird nicht zum
+// Calendly geleitet — Coaching kostet 5k+, das wäre Zeitverschwendung für
+// beide Seiten. Stattdessen Soft-Downsell ins SaaS-Tool (ai.huntecom.com).
+// Der Lead wird trotzdem im CRM gespeichert mit formId="saas_downsell" für
+// Nurturing/Re-Engagement, sobald sein Kapital steigt.
+//
 // On submit we POST to ai.huntecom.com/api/crm/lead which:
 //   1. creates / updates CrmContact in workspace=huntecom
 //   2. logs the form_submit activity
@@ -289,8 +295,13 @@ export function CoachingFunnel({
 		clearSubmitProgressAnimation();
 		submitAnimPhaseRef.current = 0;
 		setSubmitUiProgress(4);
+		// 5k-Filter: Wer < 5k Kapital angibt, bekommt einen separaten
+		// Status-Text. Das Lead-Routing passiert weiter unten beim Redirect.
+		const isSaasDownsell = data.capital === "lt5k";
 		setSubmitStatusLabel(
-			"Schritt 1 von 2: Deine Angaben werden sicher übertragen …",
+			isSaasDownsell
+				? "Schritt 1 von 2: Du wirst zum passenden Tool weitergeleitet …"
+				: "Schritt 1 von 2: Deine Angaben werden sicher übertragen …",
 		);
 		submitProgressIntervalRef.current = setInterval(() => {
 			setSubmitUiProgress((p) => {
@@ -339,7 +350,9 @@ export function CoachingFunnel({
 					phone: data.phone.trim(),
 					submissionChannel: "next",
 					workspace: "huntecom",
-					formId: "coaching_apply",
+					// 5k-Filter: Lead-ID je nach Kapital, damit CRM/Commander
+					// die Spur unterscheiden kann (Coaching vs. SaaS-Downsell).
+					formId: isSaasDownsell ? "saas_downsell" : "coaching_apply",
 					notes: data.goal.trim() || undefined,
 					eventId,
 					pageUrl: typeof window !== "undefined" ? window.location.href : undefined,
@@ -390,8 +403,27 @@ export function CoachingFunnel({
 
 		clearSubmitProgressAnimation();
 		setSubmitUiProgress(100);
-		setSubmitStatusLabel("Schritt 2 von 2: Weiterleitung zum Kalender …");
+		setSubmitStatusLabel(
+			isSaasDownsell
+				? "Schritt 2 von 2: Weiterleitung zum SaaS-Tool …"
+				: "Schritt 2 von 2: Weiterleitung zum Kalender …",
+		);
 		await new Promise((r) => setTimeout(r, 420));
+
+		// 5k-Filter Routing:
+		//   - Coaching-Spur (Kapital ≥ 5k): Calendly mit prefilled name + email
+		//   - SaaS-Downsell (Kapital < 5k): ai.huntecom.com mit UTM für Tracking
+		if (isSaasDownsell) {
+			const saasUrl = new URL("https://ai.huntecom.com");
+			saasUrl.searchParams.set("utm_source", "coaching_funnel");
+			saasUrl.searchParams.set("utm_campaign", "saas_downsell");
+			saasUrl.searchParams.set("utm_content", "lt5k_capital");
+			if (utm.source) saasUrl.searchParams.set("utm_referrer", utm.source);
+			// Email-Hint, falls die Landing einen Pre-Fill-Mechanismus hat
+			saasUrl.searchParams.set("email", data.email);
+			window.location.href = saasUrl.toString();
+			return;
+		}
 
 		// Redirect to Calendly with prefilled name + email. Calendly accepts
 		// `name`, `email`, `a1` (custom q1), … via query string.
@@ -619,18 +651,21 @@ fbq('track', 'ViewContent', { content_name: 'coaching_apply', content_category: 
 						{showLowCapitalHint ? (
 							<div className="hc-warn" role="note">
 								<strong className="hc-warn__title">
-									Hinweis: Budget unter 5.000 €
+									1:1-Coaching ist für dein Budget noch nicht der richtige Schritt
 								</strong>
 								<p className="hc-warn__body">
-									1:1-Coaching ist dann oft weniger effizient —{" "}
+									Coaching-Investition startet bei 5.000 €. Mit Budget unter
+									5.000 € ist das SaaS-Tool{" "}
 									<a
-										href="https://ai.huntecom.com"
+										href="https://ai.huntecom.com?utm_source=coaching_funnel&utm_campaign=saas_downsell"
 										target="_blank"
 										rel="noopener noreferrer"
 									>
 										ai.huntecom.com
 									</a>{" "}
-									kann der bessere Einstieg sein. Termin trotzdem möglich.
+									der ehrliche, deutlich günstigere Einstieg. Wenn du im Kontakt-Schritt
+									deine Daten lässt, melden wir uns automatisch, sobald 1:1-Coaching
+									für dich passt.
 								</p>
 							</div>
 						) : null}
