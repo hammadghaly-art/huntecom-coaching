@@ -1,0 +1,55 @@
+---
+description: Vercel Production für www.huntecom.com (Coaching-Site) — einziges Deploy-Ziel
+alwaysApply: true
+---
+
+# Vercel Production (Huntecom Coaching / www.huntecom.com)
+
+## Ein Projekt — keine Duplikate
+
+| Was | Wert |
+|-----|------|
+| **Git-Repo** | `github.com/hammadghaly-art/huntecom-coaching` |
+| **Lokaler Ordner** | `huntecom-webflow` (historischer Name nach Webflow-Migration) |
+| **Vercel-Projekt (Production)** | **`huntecom-coaching`** |
+| **Live-Domain** | `https://www.huntecom.com` |
+| **Vercel Team/Scope** | `crocos-projects-552b4268` |
+| **Projekt-ID** | `prj_4pCOxaZIpBUrWjlE9j7Q5VRUtJgQ` |
+
+### Veraltet / löschen
+
+- **`huntecom-webflow`** (Vercel) war ein **Duplikat** desselben Repos — **kein** Production-Ziel.
+- Domain `www.huntecom.com` hängt **nicht** an `huntecom-webflow`, sondern an **`huntecom-coaching`**.
+- Nach Env-Migration: Git bei `huntecom-webflow` trennen oder Projekt löschen → **pro Push nur ein Deploy**.
+
+## Environment Variables — nur in `huntecom-coaching`
+
+Alle Env-Vars gehören in **`huntecom-coaching`**, nicht in `huntecom-webflow`.
+
+| Variable | Zweck | Fallback im Code (ohne Env) |
+|----------|--------|-----------------------------|
+| `NEXT_PUBLIC_CALENDLY_URL` | Calendly nach Funnel-Submit | `https://calendly.com/huntecom/30min` |
+| `NEXT_PUBLIC_LEAD_API` | CRM-Lead POST | `https://ai.huntecom.com/api/crm/lead` |
+| `NEXT_PUBLIC_META_PIXEL_ID` | Meta Pixel (Coaching) | **leer** → kein Pixel live |
+
+→ **Meta Pixel fehlt auf Production**, solange `NEXT_PUBLIC_META_PIXEL_ID` nur in `huntecom-webflow` stand.
+
+Bevorzugt: **Production + Preview + Development** setzen.
+
+### CLI
+
+```powershell
+$env:VERCEL_ORG_ID="team_3kAHe3lqrwskwhO860PoMkD9"
+$env:VERCEL_PROJECT_ID="prj_4pCOxaZIpBUrWjlE9j7Q5VRUtJgQ"
+vercel env ls --scope crocos-projects-552b4268
+```
+
+Neue Variable: Vercel Dashboard → **huntecom-coaching** → Settings → Environment Variables.
+
+## Abgrenzung
+
+| Projekt | Domain | Repo |
+|---------|--------|------|
+| **`huntecom-coaching`** | `www.huntecom.com` | `huntecom-coaching` |
+| `huntecom-9ykl` | `ai.huntecom.com` | `ai.huntecom` |
+| `amz-huntecom` | `amz.huntecom.com` | separates Repo |
