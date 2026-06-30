@@ -1,0 +1,10 @@
+{
+	"redirects": [
+		{
+			"source": "/:path*",
+			"has": [{ "type": "host", "value": "huntecom.com" }],
+			"destination": "https://www.huntecom.com/:path*",
+			"permanent": true
+		}
+	]
+}
