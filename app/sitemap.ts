@@ -15,10 +15,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
 			priority: 1,
 		},
 		{
+			url: `${base}/apply`,
+			lastModified: lastMod,
+			changeFrequency: "weekly",
+			priority: 0.98,
+		},
+		{
 			url: `${base}/coaching`,
 			lastModified: lastMod,
 			changeFrequency: "weekly",
-			priority: 0.95,
+			priority: 0.8,
 		},
 	];
 }

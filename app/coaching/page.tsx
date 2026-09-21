@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { CoachingFunnel } from "./funnel";
+import {
+	coachingCalendlyUrl,
+	coachingLeadApiUrl,
+	coachingMetaPixelId,
+} from "@/lib/coaching-env";
 
 const SEO_TITLE = "Bewirb dich um dein 1:1 Coaching | Huntecom";
 const SEO_DESCRIPTION =
@@ -8,39 +13,24 @@ const SEO_DESCRIPTION =
 export const metadata: Metadata = {
 	title: SEO_TITLE,
 	description: SEO_DESCRIPTION,
-	alternates: { canonical: "https://www.huntecom.com/coaching" },
+	alternates: { canonical: "https://www.huntecom.com/apply" },
 	robots: { index: true, follow: true },
 	openGraph: {
 		title: SEO_TITLE,
 		description: SEO_DESCRIPTION,
 		type: "website",
-		url: "https://www.huntecom.com/coaching",
+		url: "https://www.huntecom.com/apply",
 		locale: "de_DE",
 		siteName: "Huntecom",
 	},
 };
 
-// Calendly URL is read from env so we can swap the booking provider later
-// (cal.com, savvycal, …) without redeploying the whole site.
-// Default points to the live "30min" event-type on the huntecom Calendly
-// account. The previously hard-coded `coaching-erstgespraech` slug returned
-// 404 in production and silently killed every qualified lead. If you change
-// the event-type slug in Calendly, set `NEXT_PUBLIC_CALENDLY_URL` accordingly.
-const CALENDLY_URL =
-	process.env.NEXT_PUBLIC_CALENDLY_URL ??
-	"https://calendly.com/huntecom/30min";
-
-const LEAD_API =
-	process.env.NEXT_PUBLIC_LEAD_API ?? "https://ai.huntecom.com/api/crm/lead";
-
-const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID ?? "";
-
 export default function CoachingApplyPage() {
 	return (
 		<CoachingFunnel
-			calendlyUrl={CALENDLY_URL}
-			leadApiUrl={LEAD_API}
-			metaPixelId={META_PIXEL_ID}
+			calendlyUrl={coachingCalendlyUrl()}
+			leadApiUrl={coachingLeadApiUrl()}
+			metaPixelId={coachingMetaPixelId()}
 		/>
 	);
 }

@@ -22,15 +22,18 @@ for (const f of htmlFiles) {
 	s = s.replaceAll('href="https://huntecom.com/"', 'href="index.html"');
 	// Häufig: Webflow-Staging, falls in Links vorkommt
 	s = s.replaceAll('href="https://huntecom.webflow.io/"', 'href="index.html"');
-	// Calendly → gleiche Seite, Hash öffnet Coaching-Funnel-Overlay (Next home-client)
+	// Calendly / altes Overlay → eigene Erstgespräch-Seite
 	s = s.replace(
 		/href="https:\/\/calendly\.com\/huntecom\/[^"]+"/gi,
-		'href="/#apply" target="_top" rel="noopener noreferrer"',
+		'href="/apply" target="_top" rel="noopener noreferrer"',
 	);
 	s = s.replace(
 		/href='https:\/\/calendly\.com\/huntecom\/[^']+'/gi,
-		"href='/#apply' target='_top' rel='noopener noreferrer'",
+		"href='/apply' target='_top' rel='noopener noreferrer'",
 	);
+	s = s.replaceAll('href="/#apply"', 'href="/apply"');
+	s = s.replaceAll("href='/#apply'", "href='/apply'");
+	s = s.replaceAll('href="#apply"', 'href="/apply"');
 	// Story-Copy: frischer `pnpm run mirror` zieht ggf. wieder „24 Mon.“ von Webflow — hier nachziehend patchen
 	const quoteFixes = [
 		[/Doch nach&nbsp;24&nbsp;Monaten erreichte ich/gi, "Doch bereits nach wenigen Monaten erreichte ich"],

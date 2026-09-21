@@ -1,5 +1,5 @@
 /**
- * Läuft im Webflow-Dokument (auch im Iframe): Links mit …#apply öffnen die Parent-Seite mit #apply.
+ * Läuft im Webflow-Dokument (auch im Iframe): Apply-Links öffnen die Parent-Seite /apply.
  */
 (function () {
 	"use strict";
@@ -7,14 +7,21 @@
 	function applyHref(href) {
 		if (!href) return false;
 		var h = String(href).trim();
-		if (h === "#apply" || h === "/#apply") return true;
+		if (h === "#apply" || h === "/#apply" || h === "/apply") return true;
 		return h.length >= 6 && h.slice(-6) === "#apply";
 	}
 
 	function openParentApply() {
+		var search = "";
+		try {
+			search = window.top && window.top.location ? window.top.location.search : "";
+		} catch (_searchErr) {
+			search = window.location.search || "";
+		}
+		var dest = "/apply" + search;
 		try {
 			if (window.top && window.top !== window) {
-				window.top.location.hash = "apply";
+				window.top.location.href = dest;
 				return;
 			}
 		} catch (_e) {
@@ -22,16 +29,13 @@
 		}
 		try {
 			if (window.parent && window.parent !== window) {
-				window.parent.postMessage(
-					{ t: "huntecom:apply" },
-					window.location.origin,
-				);
+				window.parent.postMessage({ t: "huntecom:apply" }, window.location.origin);
 				return;
 			}
 		} catch (_e2) {
 			/* ignore */
 		}
-		window.location.hash = "apply";
+		window.location.href = dest;
 	}
 
 	document.addEventListener(

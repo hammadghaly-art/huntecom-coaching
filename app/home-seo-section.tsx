@@ -25,7 +25,7 @@ export function HomeSeoSection() {
 				</p>
 				<ul className="huntecom-home-seo__list">
 					<li>
-						<Link href="/coaching">Coaching-Anfrage (Bewerbung &amp; Erstgespräch)</Link>
+						<Link href="/apply">Coaching-Anfrage (Bewerbung &amp; Erstgespräch)</Link>
 					</li>
 					<li>
 						<a href="https://amz.huntecom.com" rel="noopener noreferrer">
