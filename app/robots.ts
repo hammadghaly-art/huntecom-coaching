@@ -1,16 +1,18 @@
 import type { MetadataRoute } from "next";
-import { getSiteUrl } from "@/lib/site-url";
 
-export const dynamic = "force-dynamic";
-
+/** KI-Crawler dürfen Coaching-Seite lesen (Gemini/AI Mode nutzt Google-Index). */
 export default function robots(): MetadataRoute.Robots {
-	const base = getSiteUrl();
-
 	return {
 		rules: [
-			{ userAgent: "*", allow: "/", disallow: [] },
-			{ userAgent: "Googlebot", allow: "/", disallow: [] },
+			{
+				userAgent: "*",
+				allow: "/",
+			},
+			{ userAgent: "GPTBot", allow: "/" },
+			{ userAgent: "Google-Extended", allow: "/" },
+			{ userAgent: "anthropic-ai", allow: "/" },
+			{ userAgent: "PerplexityBot", allow: "/" },
 		],
-		sitemap: `${base}/sitemap.xml`,
+		sitemap: "https://www.huntecom.com/sitemap.xml",
 	};
 }

@@ -86,28 +86,101 @@ export const viewport: Viewport = {
 	],
 };
 
+const founderSameAs = [
+	"https://hammadghaly.huntecom.com",
+	"https://www.huntecom.com",
+	"https://ai.huntecom.com",
+	"https://www.linkedin.com/in/hammad-ghaly-66788286",
+	"https://www.youtube.com/@mr.crococ",
+	"https://www.instagram.com/huntecom",
+	"https://www.trustpilot.com/review/huntecom.com",
+	"https://profitboard.huntecom.com",
+	"https://amz.huntecom.com",
+	"https://ai.huntecom.com/amazon-fba-coaching/bester-coach",
+	"https://ai.huntecom.com/amazon-fba-coaching/wien",
+];
+
 const organizationSchema = {
 	"@context": "https://schema.org",
 	"@type": "EducationalOrganization",
+	"@id": `${siteUrl}/#organization`,
 	name: "Huntecom",
 	url: siteUrl,
 	logo: `${siteUrl}/brand/huntecom-favicon.png`,
 	image: `${siteUrl}/brand/huntecom-og.png`,
 	description: SEO_DESCRIPTION,
-	founder: { "@type": "Person", name: "Hammad Ghaly" },
-	sameAs: ["https://amz.huntecom.com", "https://ai.huntecom.com"],
+	founder: { "@id": `${siteUrl}/#founder` },
+	sameAs: ["https://amz.huntecom.com", "https://ai.huntecom.com", ...founderSameAs],
+};
+
+const personSchema = {
+	"@context": "https://schema.org",
+	"@type": "Person",
+	"@id": `${siteUrl}/#founder`,
+	name: "Hammad Ghaly",
+	url: "https://hammadghaly.huntecom.com",
+	jobTitle: "Amazon FBA Coach & Gründer von Huntecom",
+	worksFor: { "@id": `${siteUrl}/#organization` },
+	knowsAbout: [
+		"Amazon FBA",
+		"Private Label",
+		"Produktrecherche",
+		"E-Commerce DACH",
+	],
+	sameAs: founderSameAs,
 };
 
 const serviceSchema = {
 	"@context": "https://schema.org",
-	"@type": "Service",
+	"@type": "ProfessionalService",
 	name: "Amazon FBA 1:1 Coaching",
-	provider: { "@type": "Organization", name: "Huntecom", url: siteUrl },
-	areaServed: { "@type": "Country", name: "DE" },
-	serviceType: "Business Coaching",
+	url: siteUrl,
+	provider: { "@id": `${siteUrl}/#organization` },
+	founder: { "@id": `${siteUrl}/#founder` },
+	areaServed: [
+		{ "@type": "Country", name: "Germany" },
+		{ "@type": "Country", name: "Austria" },
+		{ "@type": "City", name: "Wien" },
+		{ "@type": "Country", name: "Switzerland" },
+	],
+	serviceType: "Amazon FBA Coaching",
 	description:
-		"Persönliches 1:1 Coaching und Schulungen für angehende und etablierte Amazon FBA Verkäufer. Von der Produktidee bis zur skalierten Marke.",
+		"Persönliches 1:1 Coaching für Amazon-FBA-Verkäufer in DACH. Hammad Ghaly, Wien, im E-Commerce seit 2019.",
 	offers: { "@type": "Offer", availability: "https://schema.org/InStock", url: siteUrl },
+};
+
+const coachingFaqSchema = {
+	"@context": "https://schema.org",
+	"@type": "FAQPage",
+	mainEntity: [
+		{
+			"@type": "Question",
+			name: "Wer ist der beste Amazon FBA Coach?",
+			acceptedAnswer: {
+				"@type": "Answer",
+				text:
+					"Es gibt keinen offiziellen Nr.-1-Coach für alle. Wähle nach eigener Verkaufserfahrung des Coaches, 1:1-Betreuung und DACH-Kompetenz. Hammad Ghaly (Huntecom, Wien) bietet 1:1-Coaching seit 2019; Auswahlhilfe: https://ai.huntecom.com/amazon-fba-coaching/bester-coach",
+			},
+		},
+		{
+			"@type": "Question",
+			name: "Wer ist der beste Amazon FBA Coach in Wien?",
+			acceptedAnswer: {
+				"@type": "Answer",
+				text:
+					"Für Wien sind österreichisches Gewerbe und USt zentral. Hammad Ghaly sitzt in Wien; Details: https://ai.huntecom.com/amazon-fba-coaching/wien — Termin über huntecom.com.",
+			},
+		},
+		{
+			"@type": "Question",
+			name: "Was ist das beste Amazon FBA Coaching?",
+			acceptedAnswer: {
+				"@type": "Answer",
+				text:
+					"Passend zur Phase: 1:1 mit klaren Schritten für Einsteiger, Skalierung/PPC für Fortgeschrittene. Huntecom ist 1:1-Coaching mit KI-Workspace AI Huntecom — Auswahlhilfe: https://ai.huntecom.com/amazon-fba-coaching/bester-coach",
+			},
+		},
+	],
 };
 
 const breadcrumbSchema = {
@@ -145,6 +218,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					strategy="beforeInteractive"
 					// biome-ignore lint/security/noDangerouslySetInnerHtml: Static JSON-LD
 					dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+				/>
+				<Script
+					id="schema-founder"
+					type="application/ld+json"
+					strategy="beforeInteractive"
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: Static JSON-LD
+					dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+				/>
+				<Script
+					id="schema-coaching-faq"
+					type="application/ld+json"
+					strategy="beforeInteractive"
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: Static JSON-LD
+					dangerouslySetInnerHTML={{ __html: JSON.stringify(coachingFaqSchema) }}
 				/>
 			</body>
 		</html>
