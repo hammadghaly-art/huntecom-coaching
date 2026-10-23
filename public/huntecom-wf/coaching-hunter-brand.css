@@ -377,30 +377,52 @@
 	}
 }
 
-/* Presse-Logos: nahtloser Marquee wie ai.huntecom (exakt 2× gleiche Reihe, -50 %) */
-.partner-section.huntecom-partner-marquee {
+/* Presse-Logos: ruhiger Marquee (2× identische Reihe, -50 %), ohne Rahmen */
+.partner-section.huntecom-partner-marquee,
+.main-wrapper > .partner-section.huntecom-partner-marquee {
 	width: 100%;
-	background-color: #000;
-	border-width: 0.5px 0;
-	border-style: solid;
-	border-color: rgba(161, 232, 251, 0.5);
+	box-sizing: border-box;
+	background-color: #000 !important;
+	border: none !important;
+	border-top: none !important;
+	border-bottom: none !important;
+	box-shadow: none !important;
 	padding: 0;
+	margin: 0;
 }
 
 .huntecom-partner-marquee__shell {
 	position: relative;
 	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.65rem;
 	width: 100%;
 	max-width: 78rem;
 	margin: 0 auto;
-	padding: clamp(0.6rem, 2.2vw, 1rem) clamp(0.75rem, 3vw, 1.25rem);
+	padding: clamp(1.1rem, 3vw, 1.45rem) clamp(0.5rem, 2.5vw, 1rem);
+}
+
+.huntecom-partner-marquee__kicker {
+	margin: 0;
+	padding: 0 0.75rem;
+	font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
+	font-size: 0.68rem;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: 0.16em;
+	text-align: center;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.42);
 }
 
 .huntecom-partner-marquee__viewport {
 	position: relative;
 	display: flex;
 	align-items: center;
-	height: clamp(3.1rem, 11vw, 4.5rem);
+	width: 100%;
+	height: 3.25rem;
 	overflow: hidden;
 }
 
@@ -408,9 +430,10 @@
 	display: flex;
 	flex-shrink: 0;
 	align-items: center;
-	gap: clamp(1.75rem, 5.5vw, 2.75rem);
+	gap: clamp(2.5rem, 6vw, 4rem);
 	width: max-content;
-	animation: huntecom-partner-marquee 34s linear infinite;
+	will-change: transform;
+	animation: huntecom-partner-marquee 42s linear infinite;
 	backface-visibility: hidden;
 	transform: translate3d(0, 0, 0);
 }
@@ -425,14 +448,18 @@
 }
 
 .huntecom-partner-marquee__logo,
-.partner-section.huntecom-partner-marquee .partner-img {
+.partner-section.huntecom-partner-marquee .partner-img,
+.huntecom-partner-marquee__track > img {
 	display: block;
+	flex: 0 0 auto;
 	width: auto;
-	height: clamp(2.35rem, 8.5vw, 3.35rem);
-	max-height: clamp(2.35rem, 8.5vw, 3.35rem);
-	max-width: none;
+	height: 2.125rem;
+	max-height: 2.125rem;
+	max-width: min(10.5rem, 34vw);
+	min-width: 3.25rem;
 	object-fit: contain;
-	flex-shrink: 0;
+	object-position: center;
+	opacity: 0.9;
 }
 
 .huntecom-partner-marquee__fade {
