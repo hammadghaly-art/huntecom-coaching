@@ -6,9 +6,93 @@
  * nur bis max-width:767px eingeblendet. Zwischen 768px und Desktop ist der Button-Container
  * unsichtbar → kein CTA trotz sichtbarem Link-Styling.
  *
- * Video: Inline-Styles (min-height + object-fit:cover) → in schmalen Spalten komisches Format;
- * fester 16:9-Rahmen + contain.
+ * Video: fester 16:9-Rahmen, object-fit cover (kein gestauchtes vw-min-height mehr).
  */
+
+/* Video + Rhythmus: alle Viewports (Web / Tablet / Mobil) */
+.hero-section .left-content-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: clamp(1rem, 2.8vw, 1.5rem);
+}
+
+.hero-section .div-block-2 {
+	width: 100%;
+	min-width: 0;
+}
+
+.hero-section .code-embed-4.huntecom-hero-video,
+.hero-section .code-embed-4 {
+	display: block !important;
+	box-sizing: border-box;
+	width: 100% !important;
+	max-width: 100%;
+	aspect-ratio: 16 / 9;
+	min-height: 0 !important;
+	height: auto !important;
+	overflow: hidden;
+	background-color: #020617;
+	contain: layout style;
+}
+
+.hero-section .code-embed-4 video {
+	display: block !important;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	min-height: 0 !important;
+	max-height: none !important;
+	object-fit: cover !important;
+	background-color: #020617 !important;
+}
+
+.hero-section .div-block-17 {
+	display: flex !important;
+	flex-direction: column;
+	align-items: stretch;
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.hero-section .button-primary.mobile {
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 100%;
+	min-height: 3.25rem;
+	padding: 0.875rem 1.25rem !important;
+	line-height: 1.35;
+	text-align: center;
+}
+
+.hero-section .button-primary.mobile .uyi2nrwj {
+	line-height: 1.35;
+}
+
+.hero-section .umtxw2el {
+	margin-top: 0.15rem;
+}
+
+.hero-section .g5m5exqi {
+	margin-top: clamp(0.75rem, 2vw, 1rem);
+}
+
+.hero-section .hzmx2e84 {
+	margin-top: clamp(0.65rem, 1.8vw, 0.9rem);
+}
+
+.hero-section .div-block-13 {
+	margin-bottom: clamp(0.75rem, 2.5vw, 1.25rem);
+}
+
+.hero-section .h1-headline-style.gap {
+	margin-bottom: clamp(0.5rem, 2vw, 1rem);
+}
 
 @media screen and (max-width: 1279px) {
 	.hero-section .content-wrapper {
@@ -32,52 +116,12 @@
 	}
 
 	/* Mobile-CTA-Container: Webflow blendet ihn nur ≤767px ein */
-	.hero-section .div-block-17 {
-		display: flex !important;
-		flex-direction: column;
-		align-items: stretch;
-		box-sizing: border-box;
-		width: 100%;
-		max-width: 100%;
-		margin-bottom: 1rem;
-	}
-
 	.hero-section .right-content-wrapper .button-primary:not(.mobile) {
 		display: none !important;
 	}
 
-	.hero-section .button-primary.mobile {
-		display: flex !important;
-		justify-content: center;
-		align-items: center;
-		width: 100%;
-		max-width: 100%;
-		box-sizing: border-box;
-	}
-
-	/* 16:9-Box statt vw/min-height + Cover */
-	.hero-section .code-embed-4 {
-		display: block !important;
-		box-sizing: border-box;
-		width: 100% !important;
-		max-width: 100%;
-		aspect-ratio: 16 / 9;
-		min-height: 0 !important;
-		height: auto !important;
-		overflow: hidden;
-		background-color: #020617;
-		contain: layout style;
-	}
-
-	.hero-section .code-embed-4 video {
-		display: block !important;
-		box-sizing: border-box;
-		width: 100%;
-		height: 100%;
-		min-height: 0 !important;
-		max-height: none !important;
-		object-fit: contain !important;
-		background-color: #020617 !important;
+	.hero-section .right-content-wrapper {
+		margin-top: clamp(1.25rem, 4vw, 2rem);
 	}
 
 	.hero-section {

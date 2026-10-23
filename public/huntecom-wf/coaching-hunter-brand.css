@@ -119,3 +119,34 @@
 .hero-section .code-embed-4 video {
 	border-radius: 1.125rem;
 }
+
+/* Hero: horizontale Luft auf schmalen Screens */
+@media screen and (max-width: 767px) {
+	.hero-section .padding-global {
+		padding-left: clamp(1rem, 4.5vw, 1.25rem);
+		padding-right: clamp(1rem, 4.5vw, 1.25rem);
+	}
+
+	.hero-section .content-wrapper {
+		gap: clamp(1.25rem, 5vw, 1.75rem) !important;
+	}
+
+	.hero-section .left-content-wrapper {
+		gap: clamp(1.1rem, 4vw, 1.35rem);
+	}
+}
+
+@media screen and (min-width: 768px) and (max-width: 1279px) {
+	.hero-section .main-container {
+		max-width: min(42rem, 94vw);
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+
+@media screen and (min-width: 1280px) {
+	.hero-section .code-embed-4.huntecom-hero-video,
+	.hero-section .code-embed-4 {
+		max-width: 100%;
+	}
+}
