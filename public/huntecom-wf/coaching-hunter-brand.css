@@ -159,3 +159,89 @@
 		max-width: 100%;
 	}
 }
+
+/* E-Commerce Masterplan: 3D-Würfel — quadratische Flächen (nicht gestaucht) */
+.cube-container {
+	flex-shrink: 0 !important;
+	box-sizing: border-box;
+	width: 11.25rem !important;
+	height: 11.25rem !important;
+	min-width: 11.25rem;
+	min-height: 11.25rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.cube-face {
+	box-sizing: border-box;
+	width: 9.375rem !important;
+	height: 9.375rem !important;
+	min-height: 9.375rem !important;
+}
+
+.baj9esvv {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-shrink: 0;
+}
+
+.cube-container-mb-8-sm-mb-0-sm-mr-16-lg-mr-24-cursor-pointer {
+	flex-shrink: 0;
+}
+
+/* Tablet: Würfel + Karten mittig, keine schmale Seitenspalte */
+@media screen and (max-width: 1279px) {
+	.icquxyii {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		margin: 0 auto 1.25rem !important;
+		flex: 0 0 auto;
+	}
+
+	.icquxyii .cube-container-mb-8-sm-mb-0-sm-mr-16-lg-mr-24-cursor-pointer {
+		margin-right: 0 !important;
+		margin-left: auto;
+		margin-right: auto !important;
+	}
+
+	.class-steps-grid-flex-flex-col-items-start-max-w-7xl-relative-px-4-sm-px-6-lg-px-8-space-y-12-sm-space-y-16-lg-space-y-20-mt-8-mb-8-lg-mb-12
+		> .relative-w-full-flex-flex-col-sm-flex-row-items-center {
+		flex-direction: column !important;
+		align-items: center !important;
+		gap: clamp(1.25rem, 4vw, 2rem);
+	}
+
+	.relative-w-full-flex-flex-col-sm-flex-row-items-center
+		> .cube-container-mb-8-sm-mb-0-sm-mr-16-lg-mr-24-cursor-pointer {
+		width: 100%;
+		margin-right: 0 !important;
+		margin-bottom: 0 !important;
+		display: flex;
+		justify-content: center;
+	}
+
+	.relative-group-flex-flex-col-items-center-sm-items-start-w-full-mt-8-sm-mt-0,
+	._w-full-text-center-sm-text-left-flex-flex-col-items-center-sm-items-start,
+	.sv6vkyse ._w-full-text-center-sm-text-left-flex-flex-col-items-center-sm-items-start {
+		align-items: center !important;
+		text-align: center !important;
+		width: 100%;
+	}
+
+	.mjbljay2,
+	.text--cccccc-mb-8-lg-text-lg-max-w-2xl-leading-relaxed {
+		text-align: center;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.grid-grid-cols-1-gap-4-sm-gap-8-lg-grid-cols-2 {
+		width: 100%;
+		max-width: 36rem;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
