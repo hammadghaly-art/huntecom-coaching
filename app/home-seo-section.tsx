@@ -33,6 +33,11 @@ export function HomeSeoSection() {
 						</a>
 					</li>
 					<li>
+						<a href="https://ai.huntecom.com/tools" rel="noopener noreferrer">
+							AI Huntecom — KI-Tools (Product Hunter, Shield Hunter, FBA-Rechner)
+						</a>
+					</li>
+					<li>
 						<a href="https://ai.huntecom.com/blog/de" rel="noopener noreferrer">
 							AI Huntecom — Blog &amp; Workflows (Amazon FBA, FBM, Wholesale, Shopify)
 						</a>
