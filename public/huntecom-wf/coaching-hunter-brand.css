@@ -474,6 +474,69 @@
 	}
 }
 
+/* Tablet: Navbar- & Hero-CTA — Label in einer Zeile (nicht untereinander) */
+@media screen and (min-width: 768px) and (max-width: 1279px) {
+	.rl_navbar2_button-wrapper {
+		flex-shrink: 0;
+		min-width: 0;
+	}
+
+	.rl_navbar2_button-wrapper .link-block,
+	.rl_navbar2_button-wrapper .link-block-2 {
+		display: inline-flex;
+		flex-shrink: 0;
+		max-width: none;
+	}
+
+	.rl_navbar2_button-wrapper .button.off,
+	.rl_navbar2_button-wrapper .button.mobile {
+		display: inline-flex !important;
+		flex-direction: row !important;
+		flex-wrap: nowrap !important;
+		align-items: center !important;
+		justify-content: center !important;
+		gap: 0.5rem !important;
+		box-sizing: border-box;
+		width: auto !important;
+		max-width: none !important;
+		min-height: 2.75rem;
+		padding: 0.55rem 1rem !important;
+	}
+
+	.rl_navbar2_button-wrapper .text-block-16,
+	.rl_navbar2_button-wrapper .text-block-8 {
+		display: block;
+		flex: 0 1 auto;
+		white-space: nowrap !important;
+		line-height: 1.15 !important;
+		font-size: clamp(0.78rem, 1.65vw, 0.92rem) !important;
+		letter-spacing: 0.01em;
+	}
+
+	.rl_navbar2_button-wrapper .kgv8ekvw,
+	.rl_navbar2_button-wrapper .lftpgs9c {
+		flex-shrink: 0;
+	}
+
+	.hero-section .button-primary.mobile {
+		display: inline-flex !important;
+		flex-direction: row !important;
+		flex-wrap: nowrap !important;
+		align-items: center !important;
+		justify-content: center !important;
+		width: auto !important;
+		max-width: 100%;
+		padding-left: 1.35rem !important;
+		padding-right: 1.35rem !important;
+	}
+
+	.hero-section .button-primary.mobile .uyi2nrwj {
+		white-space: nowrap !important;
+		line-height: 1.2 !important;
+		font-size: clamp(0.9rem, 2.2vw, 1.05rem) !important;
+	}
+}
+
 /* Dropdown „Systeme“ */
 .rl_navbar1_menu-dropdown {
 	position: relative;
