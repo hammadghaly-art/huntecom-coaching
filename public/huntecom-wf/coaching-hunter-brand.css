@@ -41,38 +41,122 @@
 	font-family: Inter, Montserrat, system-ui, sans-serif;
 }
 
-/* Dropdown „Systeme“: nicht hinter Hero/Navbar verschwinden */
+/* Dropdown „Systeme“ */
 .rl_navbar1_menu-dropdown {
 	position: relative;
 	z-index: 1200;
 }
 
-.rl_navbar1_dropdown-list.center {
-	z-index: 1300;
-}
-
-.rl_navbar1_dropdown-list.w--open {
-	display: block;
-}
-
-.dropdown-container {
-	min-width: 14.5rem;
+.huntecom-systeme-dropdown {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.1rem;
+	min-width: 15rem;
 	padding: 0.35rem 0;
 }
 
-.rl_navbar1_dropdown-link.huntecom-dropdown-label {
-	pointer-events: none;
-	font-size: 0.68rem;
+.huntecom-dropdown-label {
+	margin: 0;
+	padding: 0.55rem 0.75rem 0.2rem;
+	font-family: Inter, Montserrat, system-ui, sans-serif;
+	font-size: 0.65rem;
 	font-weight: 700;
-	letter-spacing: 0.12em;
+	letter-spacing: 0.14em;
 	text-transform: uppercase;
-	opacity: 0.55;
-	padding-top: 0.65rem;
-	padding-bottom: 0.25rem;
+	color: rgba(255, 255, 255, 0.5);
+	text-align: center;
+}
+
+.huntecom-dropdown-label--spaced {
+	padding-top: 0.75rem;
 }
 
 .rl_navbar1_dropdown-link.huntecom-dropdown-tools {
 	font-weight: 600;
+}
+
+/* Desktop: Dropdown unter „Systeme“ mittig */
+@media screen and (min-width: 992px) {
+	.rl_navbar1_dropdown-list.center {
+		z-index: 1300;
+		left: 50% !important;
+		right: auto !important;
+		transform: translateX(-50%);
+		min-width: 15.5rem;
+	}
+
+	.rl_navbar1_dropdown-list.w--open {
+		display: block;
+	}
+
+	.huntecom-systeme-dropdown .rl_navbar1_dropdown-link {
+		text-align: center;
+		white-space: nowrap;
+	}
+}
+
+/* Mobile/Tablet-Nav (Overlay): Unterpunkte unter Systeme, nicht zerquetscht */
+@media screen and (max-width: 991px) {
+	.w-nav[data-collapse="medium"] .w-nav-menu .flex-gap {
+		align-items: center;
+		width: 100%;
+	}
+
+	.w-nav[data-collapse="medium"] .navigation-wrapper {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+	}
+
+	.w-nav[data-collapse="medium"] .rl_navbar1_menu-dropdown {
+		width: 100%;
+		max-width: 20rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.w-nav[data-collapse="medium"] .rl_navbar1_menu-dropdown > .tab-link.w-dropdown-toggle {
+		justify-content: center;
+		width: 100%;
+	}
+
+	.w-nav[data-collapse="medium"] .rl_navbar1_dropdown-list,
+	.w-nav[data-collapse="medium"] .rl_navbar1_dropdown-list.center {
+		position: static !important;
+		top: auto !important;
+		left: auto !important;
+		right: auto !important;
+		transform: none !important;
+		width: 100%;
+		max-width: 18rem;
+		margin: 0.35rem auto 0;
+		padding: 0;
+		background: transparent;
+		box-shadow: none;
+	}
+
+	.w-nav[data-collapse="medium"] .rl_navbar1_dropdown-list.w--open {
+		display: flex !important;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.w-nav[data-collapse="medium"] .huntecom-systeme-dropdown {
+		width: 100%;
+		min-width: 0;
+		align-items: stretch;
+	}
+
+	.w-nav[data-collapse="medium"] .huntecom-systeme-dropdown .rl_navbar1_dropdown-link {
+		display: block;
+		width: 100%;
+		padding: 0.5rem 0.75rem;
+		text-align: center;
+		white-space: normal;
+		line-height: 1.35;
+	}
 }
 
 /* AI-Huntecom-Block: Amazon-Orange → Cyan wie Product-Hunter-Rand */
