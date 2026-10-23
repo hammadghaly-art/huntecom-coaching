@@ -106,24 +106,16 @@
 	}
 }
 
-/* Hero-Video: eleganter Rahmen — leicht gerundet (kein Pill), Hunter-Gradient */
+/* Hero-Video: elegante Ecken, neutraler Rahmen (ohne Farbverlauf) */
 .hero-section .code-embed-4 {
 	box-sizing: border-box;
 	border-radius: 1.125rem;
-	padding: 1px;
 	overflow: hidden;
-	background: linear-gradient(
-		118deg,
-		rgba(255, 153, 0, 0.55) 0%,
-		rgba(255, 153, 0, 0.12) 30%,
-		rgba(56, 189, 248, 0.14) 70%,
-		rgba(14, 165, 233, 0.5) 100%
-	);
-	box-shadow:
-		0 0 0 1px rgba(255, 255, 255, 0.06),
-		0 28px 64px -32px rgba(0, 0, 0, 0.85);
+	background: #020617;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: 0 28px 64px -32px rgba(0, 0, 0, 0.85);
 }
 
 .hero-section .code-embed-4 video {
-	border-radius: calc(1.125rem - 1px);
+	border-radius: 1.125rem;
 }
