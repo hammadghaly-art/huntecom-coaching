@@ -219,3 +219,50 @@
 		padding-top: clamp(1rem, 4vw, 2.5rem);
 	}
 }
+
+/* Mobil: Hero-CTA kompakt, eine Zeile wo möglich */
+@media screen and (max-width: 767px) {
+	.hero-section .left-content-wrapper .div-block-17 {
+		display: flex !important;
+		align-items: center;
+		width: 100%;
+		max-width: 20.5rem;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.hero-section .button-primary.mobile {
+		width: auto !important;
+		max-width: 100%;
+		min-height: 2.75rem;
+		padding: 0.625rem 1.05rem !important;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.hero-section .button-primary.mobile .uyi2nrwj {
+		font-size: clamp(0.8125rem, 3.35vw, 0.9375rem) !important;
+		font-weight: 600;
+		line-height: 1.25 !important;
+		letter-spacing: -0.01em;
+		white-space: nowrap;
+	}
+
+	.hero-section .h1-headline-style.gap .mzonvhxu {
+		font-size: clamp(1.35rem, 6.2vw, 1.65rem) !important;
+		line-height: 1.18 !important;
+		text-wrap: balance;
+	}
+
+	.hero-section .div-block-13 .text-lg-text-center-mb-8-md-mb-16-text-gray-400 {
+		font-size: clamp(0.875rem, 3.8vw, 1rem);
+		line-height: 1.45;
+		text-wrap: pretty;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.hero-section .div-block-17 {
+		display: none !important;
+	}
+}

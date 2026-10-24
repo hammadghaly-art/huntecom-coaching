@@ -481,6 +481,60 @@
 	background: linear-gradient(to left, #000 0%, rgba(0, 0, 0, 0.9) 50%, transparent 100%);
 }
 
+/* Mobil & Tablet: Presse-Marquee + Hero-Siegel lesbar */
+@media screen and (max-width: 1279px) {
+	.huntecom-partner-marquee__kicker {
+		font-size: 0.78rem;
+		letter-spacing: 0.14em;
+		color: rgba(255, 255, 255, 0.55);
+	}
+
+	.huntecom-partner-marquee__viewport {
+		height: 4.25rem;
+	}
+
+	.huntecom-partner-marquee__logo,
+	.partner-section.huntecom-partner-marquee .partner-img,
+	.huntecom-partner-marquee__track > img {
+		height: clamp(2.5rem, 7vw, 3.1rem) !important;
+		max-height: 3.1rem !important;
+		max-width: min(12rem, 46vw) !important;
+		min-width: 4.75rem !important;
+	}
+
+	.hero-section .left-content-wrapper .g5m5exqi {
+		display: block;
+		width: min(13.5rem, 78vw) !important;
+		max-width: 13.5rem !important;
+		height: auto !important;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.hero-section .left-content-wrapper .hzmx2e84 {
+		gap: 0.75rem;
+	}
+
+	.hero-section .left-content-wrapper .hzmx2e84 .a88egjan {
+		display: block;
+		width: auto !important;
+		height: clamp(3.75rem, 15vw, 5rem) !important;
+		max-height: 5rem !important;
+		object-fit: contain !important;
+	}
+
+	.hero-section .left-content-wrapper .u6skkice img.y3l4pv60,
+	.hero-section .left-content-wrapper .u6skkice img.qiyo19n6 {
+		width: clamp(2.65rem, 12vw, 3.35rem) !important;
+		height: clamp(2.65rem, 12vw, 3.35rem) !important;
+		object-fit: cover !important;
+	}
+
+	.hero-section .left-content-wrapper .lk5yuyii {
+		font-size: clamp(0.8125rem, 3.4vw, 0.9375rem);
+	}
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.huntecom-partner-marquee__track {
 		animation: none;
@@ -636,7 +690,7 @@
 		max-width: 20rem;
 		margin-left: auto;
 		margin-right: auto;
-		padding-top: clamp(1.25rem, 6vh, 2.5rem);
+		padding-top: 0;
 	}
 
 	.w-nav[data-collapse="medium"] .flex-gap > .navigation-wrapper,
@@ -756,17 +810,87 @@
 		font-size: 0.95rem;
 	}
 
-	/* Overlay: volle Fläche schwarz, Links scrollen, CTA unten fix */
+	/* Feste Kopfleiste: Logo (Startseite) + Hamburger/X — immer sichtbar über dem Overlay */
+	.w-nav[data-collapse="medium"].w--open .div-block-14 {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 110;
+		box-sizing: border-box;
+		min-height: calc(3.75rem + env(safe-area-inset-top, 0px));
+		padding-top: env(safe-area-inset-top, 0px);
+		background: rgba(0, 2, 15, 0.97);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+	}
+
+	.w-nav[data-collapse="medium"].w--open .rl_navbar2_container {
+		position: relative;
+		z-index: 111;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		max-width: 100%;
+		min-height: 3.75rem;
+		padding-left: 1rem;
+		padding-right: 1rem;
+		box-sizing: border-box;
+	}
+
+	.w-nav[data-collapse="medium"].w--open .rl_navbar2_logo-link {
+		display: inline-flex !important;
+		align-items: center;
+		min-width: 2.75rem;
+		min-height: 2.75rem;
+		padding: 0.25rem 0.35rem;
+		pointer-events: auto;
+	}
+
+	.w-nav[data-collapse="medium"].w--open .rl_navbar2_logo {
+		display: block !important;
+		max-height: 2.35rem;
+		width: auto;
+		object-fit: contain;
+	}
+
+	.w-nav[data-collapse="medium"].w--open .rl_navbar2_button-wrapper {
+		position: relative;
+		z-index: 112;
+		flex-shrink: 0;
+	}
+
+	.w-nav[data-collapse="medium"].w--open .w-nav-button {
+		z-index: 113;
+	}
+
+	/* Webflow-Overlay doppelt schwarz — aus, Menü bringt eigenen Hintergrund */
+	.w-nav[data-collapse="medium"].w--open .w-nav-overlay {
+		display: none !important;
+	}
+
+	.w-nav[data-collapse="medium"] .rl_navbar2_menu .tab-link,
+	.w-nav[data-collapse="medium"] .rl_navbar2_menu .rl_navbar1_dropdown-link {
+		color: #f8fafc !important;
+	}
+
+	.w-nav[data-collapse="medium"] .huntecom-systeme-dropdown .rl_navbar1_dropdown-link {
+		color: rgba(248, 250, 252, 0.92) !important;
+	}
+
+	/* Overlay: dunkel, lesbare Links, CTA unten fix */
 	.w-nav[data-collapse="medium"] .rl_navbar2_menu.is-page-height-tablet {
 		position: fixed;
 		inset: 0;
-		z-index: 89;
+		z-index: 95;
 		box-sizing: border-box;
 		width: 100% !important;
 		max-height: 100dvh;
 		height: 100dvh;
 		margin-top: 0 !important;
-		padding-top: calc(4.5rem + env(safe-area-inset-top, 0px)) !important;
+		padding-top: calc(4.75rem + env(safe-area-inset-top, 0px)) !important;
 		padding-right: 1.25rem !important;
 		padding-bottom: 0 !important;
 		padding-left: 1.25rem !important;
@@ -775,20 +899,64 @@
 		overflow: hidden !important;
 		flex-flow: column nowrap !important;
 		border-radius: 0 !important;
-		background-color: #000 !important;
+		background-color: #00020f !important;
 		backdrop-filter: none !important;
 		-webkit-backdrop-filter: none !important;
+	}
+
+	/* Großer Startseiten-Block im Overlay (zusätzlich zum Header-Logo) */
+	.huntecom-mobile-nav-home {
+		display: none;
+	}
+
+	.w-nav[data-collapse="medium"].w--open .huntecom-mobile-nav-home {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.45rem;
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 20rem;
+		margin: 0 auto 1rem;
+		padding: 0.85rem 1rem;
+		border-radius: 1rem;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		background: rgba(255, 255, 255, 0.06);
+		color: #f8fafc;
+		text-decoration: none;
+		flex-shrink: 0;
+	}
+
+	.w-nav[data-collapse="medium"].w--open .huntecom-mobile-nav-home__logo {
+		display: block;
+		width: auto;
+		max-width: 7.5rem;
+		height: auto;
+		max-height: 2.5rem;
+		object-fit: contain;
+	}
+
+	.w-nav[data-collapse="medium"].w--open .huntecom-mobile-nav-home__label {
+		font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
+		font-size: 0.72rem;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: rgba(248, 250, 252, 0.55);
 	}
 
 	.w-nav[data-collapse="medium"] .rl_navbar2_menu.is-page-height-tablet > .flex-gap {
 		flex: 1 1 auto !important;
 		min-height: 0 !important;
+		justify-content: center !important;
 		overflow-x: hidden !important;
 		overflow-y: auto !important;
 		-webkit-overflow-scrolling: touch;
 		overscroll-behavior: contain;
 		margin-bottom: 0 !important;
-		padding-bottom: 0.5rem;
+		padding-top: 0.25rem;
+		padding-bottom: 0.75rem;
 	}
 
 	.w-nav[data-collapse="medium"] .rl_navbar2_menu.is-page-height-tablet > .div-block-24 {
@@ -817,6 +985,14 @@
 		max-width: 100%;
 		min-height: 3rem;
 		justify-content: center;
+		background: linear-gradient(118deg, #38bdf8 0%, #0ea5e9 42%, #0e5a90 100%) !important;
+		border: 1px solid rgba(255, 255, 255, 0.2) !important;
+		color: #fff !important;
+	}
+
+	.w-nav[data-collapse="medium"] .rl_navbar2_menu.is-page-height-tablet .div-block-24 .text-block-8 {
+		color: #fff !important;
+		font-weight: 600;
 	}
 }
 
@@ -939,6 +1115,28 @@
 	margin-right: auto;
 	text-align: center;
 	text-wrap: balance;
+}
+
+/* Gleiche Titel-Skala über Sektionen (Mobil) */
+@media screen and (max-width: 767px) {
+	.main-wrapper .full-bg-gradient-section .h2-headline-style .r5jv5t0g,
+	.main-wrapper .h2-headline .fa7g4vip,
+	.main-wrapper .ergebnisse2 .medium-headline,
+	.main-wrapper .offer-section > .h1-headline-style .hc8wfn3y {
+		font-size: clamp(1.375rem, 5.2vw, 1.75rem) !important;
+		line-height: 1.22 !important;
+		letter-spacing: -0.03em !important;
+		text-wrap: balance;
+	}
+
+	.main-wrapper .text-lg-text-center-mb-8-md-mb-16-text-gray-400 {
+		font-size: clamp(0.875rem, 3.6vw, 1rem) !important;
+		line-height: 1.45 !important;
+		text-wrap: pretty;
+		max-width: 22rem;
+		margin-left: auto;
+		margin-right: auto;
+	}
 }
 
 @media screen and (max-width: 991px) {
