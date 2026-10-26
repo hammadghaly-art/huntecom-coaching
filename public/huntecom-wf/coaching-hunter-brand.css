@@ -397,11 +397,11 @@
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: 0.65rem;
+	gap: 0.35rem;
 	width: 100%;
 	max-width: 78rem;
 	margin: 0 auto;
-	padding: clamp(1.1rem, 3vw, 1.45rem) clamp(0.5rem, 2.5vw, 1rem);
+	padding: clamp(0.65rem, 2.2vw, 1rem) clamp(0.5rem, 2.5vw, 1rem);
 }
 
 .huntecom-partner-marquee__kicker {
