@@ -245,17 +245,14 @@
 }
 
 .huntecom-about-headline {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 0.4rem;
+	display: block;
 	margin: 0 auto;
-	max-width: 22rem;
+	max-width: min(22rem, 92vw);
 	text-align: center;
 	font-weight: 700;
-	line-height: 1.2;
-	letter-spacing: -0.03em;
-	text-wrap: balance;
+	line-height: 1.12;
+	letter-spacing: -0.02em;
+	text-wrap: pretty;
 }
 
 .huntecom-about-headline__kicker {
@@ -265,8 +262,16 @@
 }
 
 .huntecom-about-headline__line {
-	font-size: clamp(1.3rem, 3.4vw, 2.25rem);
+	display: block;
+	font-size: clamp(1.5rem, 5.4vw, 1.6875rem);
 	font-weight: 800;
+}
+
+@media screen and (min-width: 768px) {
+	.huntecom-about-headline__line {
+		font-size: clamp(1.75rem, 2.8vw, 2.25rem);
+		line-height: 1.15;
+	}
 }
 
 .huntecom-about-headline__sub {
@@ -422,20 +427,33 @@
 	display: flex;
 	align-items: center;
 	width: 100%;
-	height: clamp(4rem, 5.5vw, 4.75rem);
+	height: clamp(4.25rem, 6vw, 5.25rem);
 	overflow: hidden;
 }
 
 .huntecom-partner-marquee__track {
 	display: flex;
+	width: 100%;
+	overflow: visible;
+}
+
+.huntecom-partner-marquee__track-inner {
+	display: flex;
 	flex-shrink: 0;
 	align-items: center;
-	gap: clamp(2rem, 5vw, 3.5rem);
+	gap: clamp(2.25rem, 5.5vw, 3.75rem);
 	width: max-content;
 	will-change: transform;
-	animation: huntecom-partner-marquee 42s linear infinite;
+	animation: huntecom-partner-marquee 48s linear infinite;
 	backface-visibility: hidden;
 	transform: translate3d(0, 0, 0);
+}
+
+.huntecom-partner-marquee__set {
+	display: flex;
+	flex: 0 0 auto;
+	align-items: center;
+	gap: clamp(2.25rem, 5.5vw, 3.75rem);
 }
 
 @keyframes huntecom-partner-marquee {
@@ -449,17 +467,17 @@
 
 .huntecom-partner-marquee__logo,
 .partner-section.huntecom-partner-marquee .partner-img,
-.huntecom-partner-marquee__track > img {
+.huntecom-partner-marquee__set img {
 	display: block;
 	flex: 0 0 auto;
 	width: auto;
-	height: clamp(2.75rem, 3.8vw, 3.125rem);
-	max-height: 3.125rem;
-	max-width: min(13.5rem, 42vw);
-	min-width: 4.5rem;
+	height: clamp(3rem, 4.2vw, 3.5rem);
+	max-height: 3.5rem;
+	max-width: min(15rem, 48vw);
+	min-width: 5.25rem;
 	object-fit: contain;
 	object-position: center;
-	opacity: 0.9;
+	opacity: 0.92;
 }
 
 .huntecom-partner-marquee__fade {
@@ -495,11 +513,11 @@
 
 	.huntecom-partner-marquee__logo,
 	.partner-section.huntecom-partner-marquee .partner-img,
-	.huntecom-partner-marquee__track > img {
-		height: clamp(3rem, 8.5vw, 3.75rem) !important;
-		max-height: 3.75rem !important;
-		max-width: min(14rem, 52vw) !important;
-		min-width: 5.5rem !important;
+	.huntecom-partner-marquee__set img {
+		height: clamp(3.35rem, 9.5vw, 4.15rem) !important;
+		max-height: 4.15rem !important;
+		max-width: min(16rem, 58vw) !important;
+		min-width: 6rem !important;
 	}
 
 	.hero-section .left-content-wrapper .g5m5exqi {
@@ -536,7 +554,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.huntecom-partner-marquee__track {
+	.huntecom-partner-marquee__track-inner {
 		animation: none;
 		flex-wrap: wrap;
 		justify-content: center;
@@ -552,7 +570,7 @@
 
 	.huntecom-partner-marquee__logo,
 	.partner-section.huntecom-partner-marquee .partner-img,
-	.huntecom-partner-marquee__track > img {
+	.huntecom-partner-marquee__set img {
 		height: clamp(2.75rem, 7vw, 3.25rem) !important;
 		max-height: 3.25rem !important;
 	}
@@ -1174,18 +1192,32 @@
 	text-decoration: underline;
 }
 
-/* Sektions-Titel: zentriert & einheitlich (Coaching-Home) */
+/* Sektions-Titel: wie Mark (.cm1o01g2) — 2 Zeilen, eine Skala */
 .main-wrapper .offer-section > .h1-headline-style,
 .main-wrapper .results-section > .heading-2,
+.main-wrapper .testimonial-section .cm1o01g2,
 .main-wrapper .ergebnisse2 .medium-headline,
 .main-wrapper .full-bg-gradient-section .h2-headline-style .r5jv5t0g {
 	display: block;
 	width: 100%;
-	max-width: 28rem;
+	max-width: min(38rem, 94vw);
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
-	text-wrap: balance;
+	text-wrap: pretty;
+	line-height: 1.25;
+}
+
+@media screen and (min-width: 768px) {
+	.main-wrapper .testimonial-section .cm1o01g2,
+	.main-wrapper .ergebnisse2 .medium-headline,
+	.main-wrapper .full-bg-gradient-section .h2-headline-style .r5jv5t0g,
+	.main-wrapper .offer-section > .h1-headline-style .hc8wfn3y,
+	.main-wrapper .h2-headline .fa7g4vip {
+		font-size: clamp(1.75rem, 2.8vw, 2.25rem) !important;
+		line-height: 1.15 !important;
+		font-weight: 700 !important;
+	}
 }
 
 .main-wrapper .full-bg-gradient-section .h2-headline-style {
@@ -1196,25 +1228,18 @@
 	margin-top: 0;
 }
 
-/* Tablet: gleiche Titel-Skala wie Mobil */
-@media screen and (min-width: 768px) and (max-width: 1279px) {
-	.main-wrapper .full-bg-gradient-section .h2-headline-style .r5jv5t0g {
-		font-size: clamp(1.5rem, 3.2vw, 2rem) !important;
-		line-height: 1.2 !important;
-		max-width: 32rem;
-	}
-}
-
-/* Gleiche Titel-Skala über Sektionen (Mobil) */
+/* Gleiche Titel-Skala über Sektionen (Mobil ≈ Mark 27px / 28px) */
 @media screen and (max-width: 767px) {
 	.main-wrapper .full-bg-gradient-section .h2-headline-style .r5jv5t0g,
 	.main-wrapper .h2-headline .fa7g4vip,
 	.main-wrapper .ergebnisse2 .medium-headline,
+	.main-wrapper .testimonial-section .cm1o01g2,
 	.main-wrapper .offer-section > .h1-headline-style .hc8wfn3y {
-		font-size: clamp(1.375rem, 5.2vw, 1.75rem) !important;
-		line-height: 1.22 !important;
-		letter-spacing: -0.03em !important;
-		text-wrap: balance;
+		font-size: clamp(1.5rem, 5.4vw, 1.6875rem) !important;
+		line-height: 1.12 !important;
+		letter-spacing: -0.02em !important;
+		max-width: min(22rem, 92vw);
+		text-wrap: pretty;
 	}
 
 	.main-wrapper .text-lg-text-center-mb-8-md-mb-16-text-gray-400 {
