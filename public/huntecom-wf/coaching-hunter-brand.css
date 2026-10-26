@@ -422,7 +422,7 @@
 	display: flex;
 	align-items: center;
 	width: 100%;
-	height: 3.25rem;
+	height: clamp(4rem, 5.5vw, 4.75rem);
 	overflow: hidden;
 }
 
@@ -430,7 +430,7 @@
 	display: flex;
 	flex-shrink: 0;
 	align-items: center;
-	gap: clamp(2.5rem, 6vw, 4rem);
+	gap: clamp(2rem, 5vw, 3.5rem);
 	width: max-content;
 	will-change: transform;
 	animation: huntecom-partner-marquee 42s linear infinite;
@@ -453,10 +453,10 @@
 	display: block;
 	flex: 0 0 auto;
 	width: auto;
-	height: 2.125rem;
-	max-height: 2.125rem;
-	max-width: min(10.5rem, 34vw);
-	min-width: 3.25rem;
+	height: clamp(2.75rem, 3.8vw, 3.125rem);
+	max-height: 3.125rem;
+	max-width: min(13.5rem, 42vw);
+	min-width: 4.5rem;
 	object-fit: contain;
 	object-position: center;
 	opacity: 0.9;
@@ -490,16 +490,16 @@
 	}
 
 	.huntecom-partner-marquee__viewport {
-		height: 4.25rem;
+		height: clamp(4.5rem, 11vw, 5.25rem);
 	}
 
 	.huntecom-partner-marquee__logo,
 	.partner-section.huntecom-partner-marquee .partner-img,
 	.huntecom-partner-marquee__track > img {
-		height: clamp(2.5rem, 7vw, 3.1rem) !important;
-		max-height: 3.1rem !important;
-		max-width: min(12rem, 46vw) !important;
-		min-width: 4.75rem !important;
+		height: clamp(3rem, 8.5vw, 3.75rem) !important;
+		max-height: 3.75rem !important;
+		max-width: min(14rem, 52vw) !important;
+		min-width: 5.5rem !important;
 	}
 
 	.hero-section .left-content-wrapper .g5m5exqi {
@@ -546,8 +546,15 @@
 
 	.huntecom-partner-marquee__viewport {
 		height: auto;
-		min-height: 3.1rem;
+		min-height: 3.75rem;
 		padding: 0.35rem 0;
+	}
+
+	.huntecom-partner-marquee__logo,
+	.partner-section.huntecom-partner-marquee .partner-img,
+	.huntecom-partner-marquee__track > img {
+		height: clamp(2.75rem, 7vw, 3.25rem) !important;
+		max-height: 3.25rem !important;
 	}
 
 	.huntecom-partner-marquee__fade {
@@ -1107,7 +1114,8 @@
 /* Sektions-Titel: zentriert & einheitlich (Coaching-Home) */
 .main-wrapper .offer-section > .h1-headline-style,
 .main-wrapper .results-section > .heading-2,
-.main-wrapper .ergebnisse2 .medium-headline {
+.main-wrapper .ergebnisse2 .medium-headline,
+.main-wrapper .full-bg-gradient-section .h2-headline-style .r5jv5t0g {
 	display: block;
 	width: 100%;
 	max-width: 28rem;
@@ -1115,6 +1123,23 @@
 	margin-right: auto;
 	text-align: center;
 	text-wrap: balance;
+}
+
+.main-wrapper .full-bg-gradient-section .h2-headline-style {
+	margin-bottom: clamp(0.5rem, 2vw, 0.85rem);
+}
+
+.main-wrapper .full-bg-gradient-section .mb-3-text-center {
+	margin-top: 0;
+}
+
+/* Tablet: gleiche Titel-Skala wie Mobil */
+@media screen and (min-width: 768px) and (max-width: 1279px) {
+	.main-wrapper .full-bg-gradient-section .h2-headline-style .r5jv5t0g {
+		font-size: clamp(1.5rem, 3.2vw, 2rem) !important;
+		line-height: 1.2 !important;
+		max-width: 32rem;
+	}
 }
 
 /* Gleiche Titel-Skala über Sektionen (Mobil) */
