@@ -86,6 +86,11 @@
 	margin-top: clamp(0.65rem, 1.8vw, 0.9rem);
 }
 
+/* Rechte Spalte: zweites Siegel-Trio (Duplikat unter Checkliste) — nur links unter Trustpilot */
+.hero-section .right-content-wrapper .gz7w0d8p {
+	display: none !important;
+}
+
 .hero-section .div-block-13 {
 	margin-bottom: clamp(0.75rem, 2.5vw, 1.25rem);
 }
@@ -121,7 +126,21 @@
 	}
 
 	.hero-section .right-content-wrapper {
-		margin-top: clamp(1.25rem, 4vw, 2rem);
+		margin-top: clamp(1rem, 3.2vw, 1.5rem);
+		margin-bottom: clamp(0.35rem, 1.5vw, 0.65rem);
+	}
+
+	.hero-section .right-content-wrapper .ly7tcxsx {
+		margin-bottom: 0;
+	}
+
+	.main-wrapper > .partner-section.huntecom-partner-marquee {
+		margin-top: 0;
+	}
+
+	.main-wrapper > .partner-section.huntecom-partner-marquee .huntecom-partner-marquee__shell {
+		padding-top: clamp(0.85rem, 2.5vw, 1.15rem);
+		padding-bottom: clamp(0.85rem, 2.5vw, 1.15rem);
 	}
 
 	/* Tablet + Mobil (gestapelte Hero): Checkliste + Überschrift mittig */
@@ -190,8 +209,31 @@
 	}
 
 	.hero-section .left-content-wrapper .ltwfqmpl {
-		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		box-sizing: border-box;
 		width: 100%;
+		max-width: 100%;
+		margin-top: clamp(0.35rem, 1.6vw, 0.55rem);
+		margin-bottom: 0;
+		padding: 0;
+		text-align: center !important;
+	}
+
+	.hero-section .left-content-wrapper .vg7actso {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.hero-section .left-content-wrapper .lk5yuyii {
+		width: 100%;
+		max-width: 100%;
+		margin: 0 auto;
+		text-align: center !important;
 	}
 
 	.hero-section .left-content-wrapper .g5m5exqi {
