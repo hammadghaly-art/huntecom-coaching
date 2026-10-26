@@ -670,18 +670,53 @@
 	display: none !important;
 }
 
-/* Desktop: Dropdown unter „Systeme“ mittig */
+/* Desktop: Dropdown unter „Systeme“ mittig, CTA bleibt in der Zeile */
 @media screen and (min-width: 992px) {
-	.rl_navbar1_dropdown-list.center {
-		z-index: 1300;
+	.div-block-14,
+	.rl_navbar2_container,
+	.rl_navbar2_menu.is-page-height-tablet {
+		overflow: visible !important;
+	}
+
+	.rl_navbar2_container {
+		align-items: center;
+	}
+
+	.rl_navbar2_button-wrapper {
+		flex-shrink: 0;
+		align-self: center;
+		position: relative;
+		z-index: 1400;
+	}
+
+	.rl_navbar1_menu-dropdown {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.rl_navbar1_dropdown-list.w-dropdown-list,
+	.rl_navbar1_dropdown-list.center,
+	.rl_navbar1_dropdown-list.center.w--open,
+	.rl_navbar1_dropdown-list.w--open {
+		position: absolute !important;
+		top: calc(100% + 0.4rem) !important;
 		left: 50% !important;
 		right: auto !important;
-		transform: translateX(-50%);
-		min-width: 15.5rem;
+		transform: translateX(-50%) !important;
+		z-index: 1300;
+		min-width: 15.5rem !important;
+		width: max-content !important;
+		max-width: min(20rem, 92vw);
+		margin: 0 !important;
+		padding: 0.35rem 0 !important;
 	}
 
 	.rl_navbar1_dropdown-list.w--open {
 		display: block;
+	}
+
+	.huntecom-systeme-dropdown {
+		width: 100%;
 	}
 
 	.huntecom-systeme-dropdown .rl_navbar1_dropdown-link {
@@ -978,19 +1013,24 @@
 	}
 
 	.w-nav[data-collapse="medium"].w--open .rl_navbar2_menu.is-page-height-tablet > .flex-gap {
-		flex: 0 0 auto !important;
+		flex: 1 1 auto !important;
 		min-height: 0 !important;
 		justify-content: flex-start !important;
-		overflow: visible !important;
+		overflow-x: hidden !important;
+		overflow-y: auto !important;
+		-webkit-overflow-scrolling: touch;
 		margin-bottom: 0 !important;
 		padding-top: 0.35rem;
 		padding-bottom: 0.5rem;
+		width: 100%;
+		max-width: 20rem;
 	}
 
 	.w-nav[data-collapse="medium"].w--open .rl_navbar2_menu.is-page-height-tablet > .div-block-24 {
 		display: block !important;
 		flex: 0 0 auto !important;
-		margin-top: auto !important;
+		flex-shrink: 0 !important;
+		margin-top: 0 !important;
 		margin-bottom: 0 !important;
 		width: 100%;
 		max-width: 20rem;
@@ -998,9 +1038,10 @@
 		margin-right: auto;
 		padding: 0.85rem 0 calc(0.85rem + env(safe-area-inset-bottom, 0px));
 		position: relative;
-		z-index: 2;
-		background: transparent !important;
+		z-index: 6;
+		background: #00020f !important;
 		border-top: 1px solid rgba(255, 255, 255, 0.12);
+		box-shadow: 0 -12px 24px -8px rgba(0, 0, 0, 0.65);
 	}
 
 	.w-nav[data-collapse="medium"].w--open .rl_navbar2_menu.is-page-height-tablet .div-block-24 .link-block-2 {
