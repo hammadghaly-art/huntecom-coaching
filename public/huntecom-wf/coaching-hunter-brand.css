@@ -665,6 +665,11 @@
 	opacity: 0.92;
 }
 
+/* Nur Mobile-Overlay — nie in der Desktop-Zeile neben Coaching/Ergebnisse */
+.huntecom-mobile-nav-home {
+	display: none !important;
+}
+
 /* Desktop: Dropdown unter „Systeme“ mittig */
 @media screen and (min-width: 992px) {
 	.rl_navbar1_dropdown-list.center {
@@ -682,6 +687,15 @@
 	.huntecom-systeme-dropdown .rl_navbar1_dropdown-link {
 		text-align: center;
 		white-space: nowrap;
+	}
+
+	/* CTA nur rechts in der Kopfleiste — nicht doppelt im Nav-`<nav>` */
+	.rl_navbar2_menu.is-page-height-tablet > .div-block-24 {
+		display: none !important;
+	}
+
+	.rl_navbar2_button-wrapper .link-block {
+		display: inline-flex !important;
 	}
 }
 
@@ -961,34 +975,6 @@
 		background-color: #00020f !important;
 		backdrop-filter: none !important;
 		-webkit-backdrop-filter: none !important;
-	}
-
-	/* Großer Startseiten-Block im Overlay (zusätzlich zum Header-Logo) */
-	.huntecom-mobile-nav-home {
-		display: none;
-	}
-
-	/* Logo nur in der festen Kopfleiste — kein zweiter Startseiten-Kasten */
-	.w-nav[data-collapse="medium"].w--open .huntecom-mobile-nav-home {
-		display: none !important;
-	}
-
-	.w-nav[data-collapse="medium"].w--open .huntecom-mobile-nav-home__logo {
-		display: block;
-		width: auto;
-		max-width: 7.5rem;
-		height: auto;
-		max-height: 2.5rem;
-		object-fit: contain;
-	}
-
-	.w-nav[data-collapse="medium"].w--open .huntecom-mobile-nav-home__label {
-		font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
-		font-size: 0.72rem;
-		font-weight: 600;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: rgba(248, 250, 252, 0.55);
 	}
 
 	.w-nav[data-collapse="medium"].w--open .rl_navbar2_menu.is-page-height-tablet > .flex-gap {
