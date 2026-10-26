@@ -344,3 +344,23 @@
 		display: none !important;
 	}
 }
+
+/* Ergebnisse — Karte „Mehr Einkommen“: HD-Asset, sauberer Crop (Retina) */
+#ergebnisse .huntecom-result-card-img--einkommen {
+	aspect-ratio: 16 / 10;
+	object-fit: cover;
+	object-position: center 42%;
+}
+
+#ergebnisse .cards:first-child .img-cover {
+	height: auto;
+	aspect-ratio: 16 / 10;
+	max-height: clamp(13rem, 48vw, 21rem);
+	margin-bottom: 1.25rem;
+}
+
+#ergebnisse .cards:first-child .img-cover .img {
+	width: 100%;
+	height: 100%;
+	max-width: 100%;
+}
