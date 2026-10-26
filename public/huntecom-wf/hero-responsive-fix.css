@@ -182,6 +182,7 @@
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
+		text-align: center;
 	}
 
 	.hero-section .right-content-wrapper .s23ctuo6 {
@@ -189,10 +190,6 @@
 		max-width: 26rem;
 		margin-left: auto;
 		margin-right: auto;
-		text-align: center;
-	}
-
-	.hero-section .right-content-wrapper .wrapper {
 		text-align: center;
 	}
 
