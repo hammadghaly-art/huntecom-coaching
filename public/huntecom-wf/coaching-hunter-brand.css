@@ -863,14 +863,34 @@
 		object-fit: contain;
 	}
 
+	.w-nav[data-collapse="medium"] .rl_navbar2_button-wrapper .link-block {
+		display: none !important;
+	}
+
 	.w-nav[data-collapse="medium"].w--open .rl_navbar2_button-wrapper {
 		position: relative;
 		z-index: 112;
 		flex-shrink: 0;
 	}
 
+	.w-nav[data-collapse="medium"] .w-nav-button,
 	.w-nav[data-collapse="medium"].w--open .w-nav-button {
+		display: flex !important;
+		align-items: center;
+		justify-content: center;
+		box-sizing: border-box;
+		width: 2.75rem;
+		height: 2.75rem;
+		margin: 0;
+		padding: 0;
 		z-index: 113;
+		color: #f8fafc;
+	}
+
+	.w-nav[data-collapse="medium"] .rl_menu-icon2_line-top,
+	.w-nav[data-collapse="medium"] .rl_menu-icon2_line-middle,
+	.w-nav[data-collapse="medium"] .rl_menu-icon2_line-bottom {
+		background-color: #f8fafc !important;
 	}
 
 	/* Webflow-Overlay doppelt schwarz — aus, Menü bringt eigenen Hintergrund */
@@ -890,21 +910,23 @@
 	/* Overlay: dunkel, lesbare Links, CTA unten fix */
 	.w-nav[data-collapse="medium"] .rl_navbar2_menu.is-page-height-tablet {
 		position: fixed;
-		inset: 0;
+		top: calc(3.75rem + env(safe-area-inset-top, 0px));
+		right: 0;
+		bottom: 0;
+		left: 0;
 		z-index: 95;
 		box-sizing: border-box;
+		display: flex !important;
+		flex-flow: column nowrap !important;
 		width: 100% !important;
-		max-height: 100dvh;
-		height: 100dvh;
+		height: auto !important;
+		max-height: calc(100dvh - 3.75rem - env(safe-area-inset-top, 0px));
+		min-height: 0;
 		margin-top: 0 !important;
-		padding-top: calc(4.75rem + env(safe-area-inset-top, 0px)) !important;
-		padding-right: 1.25rem !important;
-		padding-bottom: 0 !important;
-		padding-left: 1.25rem !important;
+		padding: 0.75rem 1.25rem calc(0.5rem + env(safe-area-inset-bottom, 0px)) !important;
 		justify-content: flex-start !important;
 		align-items: center !important;
 		overflow: hidden !important;
-		flex-flow: column nowrap !important;
 		border-radius: 0 !important;
 		background-color: #00020f !important;
 		backdrop-filter: none !important;
@@ -916,23 +938,9 @@
 		display: none;
 	}
 
+	/* Logo nur in der festen Kopfleiste — kein zweiter Startseiten-Kasten */
 	.w-nav[data-collapse="medium"].w--open .huntecom-mobile-nav-home {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 0.45rem;
-		box-sizing: border-box;
-		width: 100%;
-		max-width: 20rem;
-		margin: 0 auto 1rem;
-		padding: 0.85rem 1rem;
-		border-radius: 1rem;
-		border: 1px solid rgba(255, 255, 255, 0.14);
-		background: rgba(255, 255, 255, 0.06);
-		color: #f8fafc;
-		text-decoration: none;
-		flex-shrink: 0;
+		display: none !important;
 	}
 
 	.w-nav[data-collapse="medium"].w--open .huntecom-mobile-nav-home__logo {
@@ -954,30 +962,28 @@
 	}
 
 	.w-nav[data-collapse="medium"] .rl_navbar2_menu.is-page-height-tablet > .flex-gap {
-		flex: 1 1 auto !important;
+		flex: 0 0 auto !important;
 		min-height: 0 !important;
-		justify-content: center !important;
-		overflow-x: hidden !important;
-		overflow-y: auto !important;
-		-webkit-overflow-scrolling: touch;
-		overscroll-behavior: contain;
+		justify-content: flex-start !important;
+		overflow: visible !important;
 		margin-bottom: 0 !important;
-		padding-top: 0.25rem;
-		padding-bottom: 0.75rem;
+		padding-top: 0.35rem;
+		padding-bottom: 0.5rem;
 	}
 
 	.w-nav[data-collapse="medium"] .rl_navbar2_menu.is-page-height-tablet > .div-block-24 {
+		display: block !important;
 		flex: 0 0 auto !important;
-		margin-top: 0 !important;
+		margin-top: auto !important;
 		margin-bottom: 0 !important;
 		width: 100%;
 		max-width: 20rem;
 		margin-left: auto;
 		margin-right: auto;
-		padding: 1rem 0 calc(1rem + env(safe-area-inset-bottom, 0px));
+		padding: 0.85rem 0 calc(0.85rem + env(safe-area-inset-bottom, 0px));
 		position: relative;
 		z-index: 2;
-		background: #000 !important;
+		background: transparent !important;
 		border-top: 1px solid rgba(255, 255, 255, 0.12);
 	}
 
